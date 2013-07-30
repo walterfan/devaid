@@ -1,4 +1,4 @@
-package com.github.walterfan.util;
+package com.github.walterfan.util.swing;
 
 import java.awt.Color;
 import java.awt.Component;

@@ -8,7 +8,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,7 +38,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.github.walterfan.util.*;
-import com.github.walterfan.util.UnderlineHighlighter.UnderlineHighlightPainter;
+import com.github.walterfan.util.swing.ActionHandlerFactory;
+import com.github.walterfan.util.swing.EntrySelectListener;
+import com.github.walterfan.util.swing.KeyValueTablePane;
+import com.github.walterfan.util.swing.SwingTool;
+import com.github.walterfan.util.swing.SwingUtils;
+import com.github.walterfan.util.swing.UnderlineHighlighter.UnderlineHighlightPainter;
 /**
  * 
  * 1. frequency used regex pattern list 2. basic regex elements list 3. regex

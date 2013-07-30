@@ -1,4 +1,4 @@
-package com.github.walterfan.util;
+package com.github.walterfan.util.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,9 +11,7 @@ import java.awt.event.KeyEvent;
 import java.net.URL;
 
 import javax.swing.JButton;
-
 import javax.swing.JFrame;
-
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;

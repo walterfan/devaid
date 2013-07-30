@@ -1,4 +1,4 @@
-package com.github.walterfan.util;
+package com.github.walterfan.util.swing;
 
 import java.awt.BorderLayout;
 import java.awt.TextComponent;
@@ -16,6 +16,8 @@ import javax.swing.JEditorPane;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
+
+import com.github.walterfan.util.TextTransfer;
 
 
 /**

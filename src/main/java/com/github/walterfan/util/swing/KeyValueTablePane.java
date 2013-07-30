@@ -1,4 +1,4 @@
-package com.github.walterfan.util;
+package com.github.walterfan.util.swing;
 
 
 import java.awt.event.MouseEvent;
@@ -14,6 +14,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+
+import com.github.walterfan.util.ConfigLoader;
 
 
 

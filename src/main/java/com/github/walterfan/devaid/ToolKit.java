@@ -8,7 +8,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.github.walterfan.util.SwingUtils;
+import com.github.walterfan.util.swing.SwingUtils;
 
 
 /**
