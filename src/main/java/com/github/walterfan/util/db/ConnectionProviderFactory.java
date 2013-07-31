@@ -48,10 +48,6 @@ public final class ConnectionProviderFactory  {
 
 	}
 
-    public static ConnectionProvider createOracleDataSourceProvider(DbConfig dbCfg) {
-        return new OraConnectionProvider(dbCfg);
-    }
-    
     public static ConnectionProvider createDbcpConnectionPool(DbConfig dbCfg) {
         return new DriverManagerProvider(dbCfg);
     }

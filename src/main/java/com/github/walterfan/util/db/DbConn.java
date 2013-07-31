@@ -223,7 +223,9 @@ public class DbConn implements ConnectionHolder {
             System.out.println("Arguments: url username password");
             return;
         }
-        ConnectionProvider provider = new OraConnectionProvider(args[0], args[1],args[2]);
+        
+        DbConfig dbConn = new DbConfig(args[0], args[1],args[2]);
+        ConnectionProvider provider = new DriverManagerProvider();
         DbConn dc = new DbConn(provider);
 
         try {

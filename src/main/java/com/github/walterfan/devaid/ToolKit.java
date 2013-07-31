@@ -8,6 +8,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.github.walterfan.devaid.http.HttpTool;
+import com.github.walterfan.devaid.sql.SQLTool;
 import com.github.walterfan.util.swing.SwingUtils;
 
 
@@ -69,8 +71,12 @@ public class ToolKit extends JFrame implements ChangeListener {
         regexTool.init();
         frameContainer.addFrame(regexTool);
 
-       
+        SQLTool sqlTool = new SQLTool("SQL Tool");
+        sqlTool.init();
+        frameContainer.addFrame(sqlTool);
 
+        frameContainer.addFrame(new HttpTool("Http Tool"));
+        
         SwingUtils.run(frameContainer, 1000, 700);
     }
 }
