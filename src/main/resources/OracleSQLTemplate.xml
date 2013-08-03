@@ -1,0 +1,163 @@
+<SQLTemplate>
+<sqls type="Common">
+<sql name="getCurrentDate">
+select sysdate from dual
+</sql>
+<sql name="getAllTables">
+select * from tab
+</sql>
+<sql name="getServerAddress">
+select utl_inaddr.get_host_address  from dual
+</sql>
+<sql name="getClientAddress">
+select sys_context('userenv','ip_address')  from dual
+</sql>
+<sql name="findRepeatedRecord">
+<![CDATA[select * from table t1 where where t1.rowed !=
+(select max(rowed) from table t2
+where t1.id=t2.id and t1.name=t2.name)
+]]>
+</sql>
+
+<sql name="getTables">
+select   table_name   from   user_tables
+</sql>
+<sql name="getTableColumns">
+select COLUMN_NAME, DATA_TYPE, DATA_PRECISION, DATA_DEFAULT,NULLABLE from user_tab_columns where table_name='XXX'
+</sql>
+<sql name="getTableConsitraint">
+select * from user_cons_columns where table_name='XXX' order by constraint_name
+</sql>
+<sql name="alterTableColumn">
+alter table tablename modify (column datatype [default value][null/not null])
+</sql>
+<sql name="addTableColumn">
+alter table tablename add (column datatype [default value][null/not null])</sql>
+<sql name="dropTableColumn">
+alter table tablename drop (column);
+</sql>
+</sqls>
+<sqls type="Admin">
+<sql name="querySystemParameters">
+select * from v$parameter</sql>
+<sql name="findRepeatedRecord">
+<![CDATA[select sys.v_$session.osuser,sys.v_$session.machine,v$lock.sid,
+sys.v_$session.serial#,
+decode(v$lock.type,
+'MR', 'Media Recovery',
+'RT','Redo Thread',
+'UN','User Name',
+'TX', 'Transaction',
+'TM', 'DML',
+'UL', 'PL/SQL User Lock',
+'DX', 'Distributed Xaction',
+'CF', 'Control File',
+'IS', 'Instance State',
+'FS', 'File Set',
+'IR', 'Instance Recovery',
+'ST', 'Disk Space Transaction',
+'TS', 'Temp Segment',
+'IV', 'Library Cache Invalida-tion',
+'LS', 'Log Start or Switch',
+'RW', 'Row Wait',
+'SQ', 'Sequence Number',
+'TE', 'Extend Table',
+'TT', 'Temp Table',
+'Unknown') LockType,
+rtrim(object_type) || ' ' || rtrim(owner) || '.' || object_name object_name,
+decode(lmode, 0, 'None',
+1, 'Null',
+2, 'Row-S',
+3, 'Row-X',
+4, 'Share',
+5, 'S/Row-X',
+6, 'Exclusive', 'Unknown') LockMode,
+decode(request, 0, 'None',
+1, 'Null',
+2, 'Row-S',
+3, 'Row-X',
+4, 'Share',
+5, 'S/Row-X',
+6, 'Exclusive', 'Unknown') RequestMode,
+ctime, block b
+from v$lock, all_objects, sys.v_$session
+where v$Lock.sid > 6
+and sys.v_$session.sid = v$lock.sid
+and v$lock.id1 = all_objects.object_id]]></sql>
+<sql name="queryTableSpace"><![CDATA[
+SELECT a.tablespace_name , a.file_name , a.avail availspace, NVL(b.free,0) freespace ,
+       NVL(ROUND(((free/avail)*100),2),0) unused
+FROM (SELECT tablespace_name, SUBSTR(file_name,1,45) file_name,
+             file_id, ROUND(SUM(bytes/(1024*1024)),3) avail
+      FROM   sys.dba_data_files
+      GROUP BY  tablespace_name, SUBSTR(file_name,1,45),
+                file_id) a,
+      (SELECT tablespace_name, file_id,
+             ROUND(SUM(bytes/(1024*1024)),3) free
+      FROM   sys.dba_free_space
+      GROUP BY tablespace_name, file_id) b
+WHERE a.file_id = b.file_id (+)
+ORDER BY 1, 2 ]]></sql>
+</sqls>
+<sqls type="GWDB">
+<sql name="queryVmFlowTcp"><![CDATA[
+select * from GWVMFLOWTCPSTAT WHERE ROWNUM<=100
+]]></sql>
+<sql name="queryMsiLocation"><![CDATA[
+select * from GWUSERLOCATION WHERE ROWNUM<=10
+]]></sql>
+<sql name="queryConfSessionTmp"><![CDATA[
+select objID, confID, sequenceNumber from GWCONFSESSION_TMP WHERE ROWNUM<=1000
+]]></sql>
+<sql name="querySpaConfSession">
+select confID, meetingDomainID,createTime from GWSPAMEETING
+</sql>
+<sql name="querySpaMeetingDomain">
+select * from WBXMEETINGDOMAIN WHERE ISSPADOMAIN=1
+</sql>
+<sql name="insertSpaConfSession">
+insert into GWSPAMEETING(confID, meetingDomainID) values(#confID#, #meetingDomainID#)
+</sql>
+<sql name="insertConfSession">
+insert into GWCONFSESSION_TMP(confID, sequenceNumber) values(#confID#, sequenceNumber)
+</sql>
+<sql name="removeSpaConfSession">
+delete from GWSPAMEETING where objID in (?,?,?,?)
+</sql>
+<sql name="selectGWCONFIDSITEIDMAPPING">
+select * from GWCONFIDSITEIDMAPPING where confid = ?
+</sql>
+<sql name="selectGWCONFIDSITEIDMAPPING">
+select siteID, confID, status from GWCONFIDSITEIDMAPPING where confid = ?
+</sql>
+<sql name="selectWBXMDPCLUSTER">
+select clusterID,clusterName,url from WBXMDPCLUSTER
+</sql>
+<sql name="selectWBXCURRENTCONF"><![CDATA[
+select serverid, confid, meetingtype, confname, 
+		(opentime- to_date('1970-01-01','yyyy-mm-dd')) * 86400000 as startTime, 
+		(closetime- to_date('1970-01-01','yyyy-mm-dd')) * 86400000 as endTime,
+   status, siteid, subofficeid, mname, gname, meetingkey from WBXCURRENTCONF 
+   where confID = #confID# and rownum < 2
+]]></sql>
+</sqls>
+<sqls type="SPADB">
+<sql name="getSpaConfig">
+select spaname as spa_name, spakey as spa_key,token,hostname,SERIALNO,WBXMGRVERSION from wbxspa where WBXMGRVERSION is not null
+</sql>
+<sql name="getSpaSite">
+select a.siteid, a.sitename, b.domainID,c.groupID from  wbxsite a, wbxsitewebdomain b, wbxspagroupsite c where a.siteid=b.siteid and a.sitename=c.sitename
+</sql>
+<sql name="getNotification">
+select a.*, b.propertysn,b.propertyname, b.oldvalue, b.newvalue from wbxspanotification a, wbxspachangeproperty b 
+where a.notificationid=b.notificationid
+</sql>
+<sql name="getSpaStatusByWdID">
+select * from wbxspastatus  where STATUSTYPE=1 and status!=0 and spaID in 
+        (select distinct a.spaid from wbxspa a, wbxspagroupsite b, wbxsite c, wbxsitewebdomain d
+          where a.status is null and a.groupid=b.groupid 
+          and b.sitename=c.sitename and c.siteid=d.siteid 
+          and d.domainid=7701)
+</sql>
+</sqls>
+</SQLTemplate>

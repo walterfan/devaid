@@ -1,0 +1,26 @@
+<JdbcConfigs>
+  <JdbcConfig name="wfdb_oracle" type="oracle">
+    <driverClass>oracle.jdbc.driver.OracleDriver</driverClass>
+    <url>jdbc:oracle:thin:@waltersite:1521:wfdb</url>
+    <userName>walter</userName>
+    <password>pass</password>
+  </JdbcConfig>
+  <JdbcConfig name="wfdb_mysql" type="mysql">
+    <driverClass>com.mysql.jdbc.Driver</driverClass>
+    <url><![CDATA[jdbc:mysql://waltersite/wfdb?useUnicode=true&characterEncoding=utf8]]></url>
+    <userName>walter</userName>
+    <password>pass</password>
+  </JdbcConfig>
+  <JdbcConfig name="wfdb_sqlserver" type="mssql">
+    <driverClass>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClass>
+    <url>jdbc:sqlserver://waltersitet:1433</url>
+    <userName>walter</userName>
+    <password>pass</password>
+  </JdbcConfig>
+   <JdbcConfig name="wfdb_sqlite" type="sqlite">
+    <driverClass>org.sqlite.JDBC</driverClass>
+    <url>jdbc:sqlite:d:/walter/data/wfdb.s3db</url>
+    <userName>walter</userName>
+    <password>pass</password>
+  </JdbcConfig>
+</JdbcConfigs>

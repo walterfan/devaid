@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -76,6 +77,11 @@ public class FileUtil {
         return readFromFile(new File(filename));
     }
 
+    public static InputStream readFromClassPath(String name) throws IOException {
+    	ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        return loader.getResourceAsStream(name);
+    }
+    
     public static void writeToFile(String name, byte[] bytes) throws IOException {
         writeToFile(new File(name), bytes);
     }
@@ -216,6 +222,8 @@ public class FileUtil {
         }// if
         return size;
     }
+    
+
 
     public static byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024);

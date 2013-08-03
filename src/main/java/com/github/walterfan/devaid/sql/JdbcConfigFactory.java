@@ -12,7 +12,6 @@ import org.apache.commons.io.IOUtils;
 
 
 
-import com.github.walterfan.util.FileUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -84,10 +83,7 @@ public class JdbcConfigFactory {
 	}
 	
 	public static JdbcConfigFactory deserialize() throws IOException {
-	        if(FileUtil.isFileExist(configFilename))
-	            return deserialize(configFilename);
-	        else 
-	            return null;
+		return deserialize(configFilename);
 	}
 	
 	private static XStream createXStream() {

@@ -77,6 +77,7 @@ import com.github.walterfan.util.http.HttpUtil;
 import com.github.walterfan.util.RegexUtils;
 import com.github.walterfan.util.swing.ActionHandlerFactory;
 import com.github.walterfan.util.swing.SwingUtils;
+import com.github.walterfan.util.swing.XMLFormatter;
 import com.github.walterfan.util.swing.UnderlineHighlighter.UnderlineHighlightPainter;
 
 import com.thoughtworks.xstream.XStream;
@@ -685,7 +686,23 @@ public class HttpTool extends JFrame {
                         textAreaRequest, textAreaResponse });
         contextMenu.addSeparator();
 
+        final JMenuItem formatMenuItem = new JMenuItem("Format XML", 'f');
+        formatMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final Component c = contextMenu.getInvoker();
 
+                if (c instanceof JTextComponent) {
+                    JTextComponent txtBox = ((JTextComponent) c);
+                    String fullTxt = txtBox.getText();
+                    try {
+                        txtBox.setText(XMLFormatter.format(fullTxt));
+                    } catch (Exception ex) {
+                        // ignore, not fomat it
+                    }
+                }
+            }
+        });
+        contextMenu.add(formatMenuItem);
         // TODO: refactor to remove duplicated codes
         /* text fields popup menu: "URLEncode" */
         final JMenuItem urlenMenuItem = new JMenuItem("URLEncode", 'e');
@@ -1137,7 +1154,14 @@ public class HttpTool extends JFrame {
                 printLog("response:\n" + sb.toString());
                 
 
-
+                if (this.chkFormat.isSelected()) {
+                    try {
+                        textAreaResponse.setText(XMLFormatter
+                                .format(textAreaResponse.getText()));
+                    } catch (Exception exp) {
+                        // ignore it, not format
+                    }
+                }
 
                 long duration = System.currentTimeMillis() - startTime;
                 textPerfHint.setText("duration:" + duration + " ms");

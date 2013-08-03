@@ -202,7 +202,7 @@ public class SQLTool extends SwingTool {
                 File file = c.getSelectedFile();
                 curSqlTplName = file.getAbsolutePath();
 
-                //sqlTemplate = new IbatisSQLTemplate();
+                sqlTemplate = new IbatisSQLTemplate();
                 try {
                     SQLTool.this.createSqlMenuAndTree(curSqlTplName);
                     sqlMenu.repaint();
@@ -678,11 +678,11 @@ public class SQLTool extends SwingTool {
 
             jdbcFactory = JdbcConfigFactory.deserialize();
         } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
-            
-        }
-        if(null == jdbcFactory)
             jdbcFactory = JdbcConfigFactory.createJdbcConfigFactory();
+        }
+
     }
 
     private JPanel createSqlPanel() {
@@ -738,12 +738,12 @@ public class SQLTool extends SwingTool {
         JSplitPane leftPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
                 new JScrollPane(txtSQL), new JScrollPane(sqlList));
         leftPane.setOneTouchExpandable(true);
-        leftPane.setDividerLocation(0.98);
+        leftPane.setDividerLocation(360);
 
         JSplitPane topPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
                 leftPane, sqlTreePane);
         topPane.setOneTouchExpandable(true);
-        topPane.setDividerLocation(1024);
+        topPane.setDividerLocation(0.8);
         sqlPanel.add(topPane, BorderLayout.CENTER);
 
     }
@@ -840,7 +840,9 @@ public class SQLTool extends SwingTool {
             sqlTreePane = new JScrollPane(treePane);
 
         } catch (Exception e) {
-            SwingUtils.alert("There is no SQL config file: " + e.getMessage());
+        	//allow load xml error
+            //SwingUtils.alert("Load XML error: " + e.getMessage());
+        	e.printStackTrace();
 
         }
 
@@ -1007,7 +1009,7 @@ public class SQLTool extends SwingTool {
                 cfgPanel, sqlPanel);
 
         splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerLocation(1);
+        splitPane.setDividerLocation(0.5);
 
         // Provide minimum sizes for the two components in the split pane.
         Dimension minimumSize = new Dimension(100, 50);

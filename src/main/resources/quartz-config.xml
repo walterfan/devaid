@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd"> 
+
+<beans>      
+    <bean id="remindJob" class="cn.fanyamin.job.RemindJob"></bean> 
+
+    <bean id="remindJobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+        <property name="targetObject"> 
+            <ref bean="remindJob"/> 
+        </property> 
+        <property name="targetMethod"> 
+            <value>work</value> 
+        </property> 
+    </bean> 
+
+    <bean id="remindJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+        <property name="jobDetail"> 
+            <ref bean="remindJobTask"/> 
+        </property> 
+        <!-- cron expression --> 
+        <property name="cronExpression"> 
+            <value>0 */5 * * * ?</value> 
+        </property> 
+    </bean> 
+
+    <bean id="jobManager" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> 
+        <property name="triggers"> 
+            <list> 
+                <ref bean="remindJobTrigger"/> 
+            </list> 
+        </property> 
+    </bean> 
+  
+</beans>

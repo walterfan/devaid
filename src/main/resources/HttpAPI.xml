@@ -1,0 +1,62 @@
+<HttpAPI>
+<HttpCommandGroup name="GoogleAPI">
+<httpcommand name="GoogleWeather" method="get">
+<url><![CDATA[
+http://www.google.com/ig/api?weather=HeFei]]>
+</url>
+<response resultPath="/weather/forecast_information"/>
+</httpcommand>
+<httpcommand name="GoogleCountry" method="get">
+<url><![CDATA[
+http://www.google.com/ig/countries?output=xml&hl=zh-cn]]> 
+</url>
+<response resultPath="/weather/forecast_information"/>
+</httpcommand>
+<httpcommand name="GoogleCity" method="post">
+<url><![CDATA[
+http://www.google.com/ig/cities?output=xml&hl=zh-cn&country=cn]]>
+</url>
+<header></header>
+<request></request>
+<response resultPath="/weather/forecast_information"/>
+</httpcommand>
+</HttpCommandGroup>
+<HttpCommandGroup name="Douban">
+<httpcommand name="GetBookInfo" method="get">
+<url><![CDATA[
+http://api.douban.com/book/subject/1220562
+]]></url>
+</httpcommand>
+<httpcommand name="WriteDiary" method="post">
+<url><![CDATA[
+http://api.douban.com/notes
+]]></url>
+<request><![CDATA[
+test
+]]></request>
+</httpcommand>
+</HttpCommandGroup>
+<HttpCommandGroup name="RememberTheMilk">
+<httpcommand name="test" method="get">
+<url><![CDATA[
+http://api.rememberthemilk.com/services/rest/?method=rtm.test.echo&api_key=66206d64fd8228af0c6e1c08a1948e5a&name=value
+]]></url>
+</httpcommand>
+</HttpCommandGroup>
+<HttpCommandGroup name="PIMS">
+<httpcommand name="DebugServlet" method="get">
+<url><![CDATA[
+http://127.0.0.1:1975/pims/DebugServlet
+]]></url>
+</httpcommand>
+<httpcommand name="DebugAction" method="post">
+<url><![CDATA[
+http://localhost:1975/pims/api.do
+]]></url>
+<request>cmd=debug</request>
+
+</httpcommand>
+
+</HttpCommandGroup>
+
+</HttpAPI>

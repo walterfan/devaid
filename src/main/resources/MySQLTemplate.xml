@@ -1,0 +1,24 @@
+<SQLTemplate>
+<sqls type="common">
+<sql name="getCurrentDate">
+select current_date
+</sql>
+<sql name="getCurrentVersion">
+select version()
+</sql>
+<sql name="getAllTables">
+show tables
+</sql>
+<sql name="getTableStructure">
+describe [tablename]
+</sql>
+</sqls>
+<sqls type="wfdb">
+<sql name="getWFUsers">
+select * from wfuser
+</sql>
+<sql name="updateWFUserEmail">
+update wfuser set email='fanyamin@china.com' where username='fym'
+</sql>
+</sqls>
+</SQLTemplate>

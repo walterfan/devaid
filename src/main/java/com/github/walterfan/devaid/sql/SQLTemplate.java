@@ -18,6 +18,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.github.walterfan.util.FileUtil;
+
 
 public class SQLTemplate {
     
@@ -32,7 +34,7 @@ public class SQLTemplate {
 
     public void loadFromXml(String cfgFile) throws Exception {
 
-        InputStream is = new FileInputStream(cfgFile);
+        InputStream is = FileUtil.readFromClassPath(cfgFile);
 
         if (is == null) {
             logger.error("cannot find " + cfgFile);
@@ -43,13 +45,16 @@ public class SQLTemplate {
     }
 
     public void loadFromResource(String cfgFile) throws Exception {
-        InputStream is  = new FileInputStream(cfgFile);
+        //InputStream is  = new FileInputStream(cfgFile);
+    	InputStream is  = FileUtil.readFromClassPath(cfgFile);
         if (is == null) {
             logger.error("cannot find " + cfgFile);
             throw new DocumentException("cannot find " + cfgFile);
         }
         loadFromStream(is);
     }  
+    
+    
     
     public void loadFromStream(InputStream is) throws Exception {
         try {
