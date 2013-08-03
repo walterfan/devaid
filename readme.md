@@ -17,8 +17,8 @@ Developer Aid Toolkit 1.0
 * 1) mvn package
 * 2) java -jar ./target/devaid-1.0-jar-with-dependencies.jar
 
-    :::text
-    Copyright [yyyy] [name of copyright owner]
+
+    Copyright 2013 Walter Fan
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ Developer Aid Toolkit 1.0
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
 
 Thanks for using it
 Walter Fan
