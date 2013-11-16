@@ -63,19 +63,19 @@ public class ToolKit extends JFrame implements ChangeListener {
         ToolKit frameContainer = new ToolKit(
                 "Development Aid Tool Kits v1.0 - Walter Fan Ya Min");
 
-        EncodeTool encodeTool = new EncodeTool("Encode Tool");
-        encodeTool.init();
-        frameContainer.addFrame(encodeTool);
-
-        RegexTool regexTool = new RegexTool("Regular Expression Tool");
-        regexTool.init();
-        frameContainer.addFrame(regexTool);
-
+        frameContainer.addFrame(new HttpTool("Http Tool"));
+        
         SQLTool sqlTool = new SQLTool("SQL Tool");
         sqlTool.init();
         frameContainer.addFrame(sqlTool);
-
-        frameContainer.addFrame(new HttpTool("Http Tool"));
+        
+        RegexTool regexTool = new RegexTool("Regular Expression Tool");
+        regexTool.init();
+        frameContainer.addFrame(regexTool);
+        
+        EncodeTool encodeTool = new EncodeTool("Encode Tool");
+        encodeTool.init();
+        frameContainer.addFrame(encodeTool);
         
         SwingUtils.run(frameContainer, 1000, 700);
     }
