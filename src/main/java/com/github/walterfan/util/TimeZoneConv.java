@@ -1,5 +1,6 @@
 package com.github.walterfan.util;
 
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

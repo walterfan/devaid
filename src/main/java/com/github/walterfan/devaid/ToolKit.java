@@ -77,6 +77,10 @@ public class ToolKit extends JFrame implements ChangeListener {
         encodeTool.init();
         frameContainer.addFrame(encodeTool);
         
+        JFrame tzTool = new TimeZoneConverter();
+        frameContainer.addFrame(tzTool);
+
+        
         SwingUtils.run(frameContainer, 1000, 700);
     }
 }
