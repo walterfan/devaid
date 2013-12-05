@@ -137,7 +137,7 @@ public class HttpTool extends JFrame {
     private JLabel labelResponse = new JLabel("Http Response: ",
             SwingConstants.LEFT);
     private JTextArea textAreaResponse = new JTextArea(6, 50);
-
+    private  ButtonGroup rg = new ButtonGroup();
     private JRadioButton rb1 = new JRadioButton("Get", false),
             rb2 = new JRadioButton("Post", false), rb3 = new JRadioButton(
                     "Put", false), rb4 = new JRadioButton("Delete", false);
@@ -231,14 +231,21 @@ public class HttpTool extends JFrame {
                 if (node.isLeaf()) {
                     HttpCommand cmd = (HttpCommand) nodeInfo;
                     textAreaName.setText(cmd.getName());
-                    // textAreaUrl.setToolTipText(cmd.getName());
+                    
                     textAreaUrl.setText(cmd.getUrl());
                     textAreaHeader.setText(cmd.getHeader());
                     textAreaRequest.setText(cmd.getRequest());
                     textAreaResponse.setText("");
+                    rg.clearSelection();
                     if ("post".equalsIgnoreCase(cmd.getMethod())) {
                         rb2.setSelected(true);
-                    } else {
+                    } if ("put".equalsIgnoreCase(cmd.getMethod())) {
+                        rb3.setSelected(true);
+                        rb1.setSelected(false);
+                        logger.debug("why not working for http method=" + cmd.getMethod());
+                    } if ("delete".equalsIgnoreCase(cmd.getMethod())) {
+                        rb4.setSelected(true);
+                    }else {
                         rb1.setSelected(true);
                     }
                 }
@@ -471,9 +478,14 @@ public class HttpTool extends JFrame {
                 textAreaHeader.setText(cmd.getHeader());
                 textAreaRequest.setText(cmd.getRequest());
                 textAreaResponse.setText(cmd.getResponse());
+
                 if ("post".equalsIgnoreCase(cmd.getMethod())) {
                     rb2.setSelected(true);
-                } else {
+                } if ("put".equalsIgnoreCase(cmd.getMethod())) {
+                    rb3.setSelected(true);
+                } if ("delete".equalsIgnoreCase(cmd.getMethod())) {
+                    rb4.setSelected(true);
+                }else {
                     rb1.setSelected(true);
                 }
             }
@@ -541,9 +553,14 @@ public class HttpTool extends JFrame {
             textAreaHeader.setText(cmd.getHeader());
             textAreaRequest.setText(cmd.getRequest());
             textAreaResponse.setText("");
+
             if ("post".equalsIgnoreCase(cmd.getMethod())) {
                 rb2.setSelected(true);
-            } else {
+            } if ("put".equalsIgnoreCase(cmd.getMethod())) {
+                rb3.setSelected(true);
+            } if ("delete".equalsIgnoreCase(cmd.getMethod())) {
+                rb4.setSelected(true);
+            }else {
                 rb1.setSelected(true);
             }
         }
@@ -794,7 +811,7 @@ public class HttpTool extends JFrame {
         btnSubmit.addActionListener(new SubmitButtonHandler());
         hBox.add(btnSubmit);
 
-        ButtonGroup rg = new ButtonGroup();
+        
         rg.add(rb1);
         rb1.setSelected(true);
         rg.add(rb2);

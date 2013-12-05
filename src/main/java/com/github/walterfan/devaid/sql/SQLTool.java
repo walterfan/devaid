@@ -553,7 +553,7 @@ public class SQLTool extends SwingTool {
 
     private JComboBox resultTypeList;
     // Create the Swing components we'll be using
-    JTextArea txtSQL = new JTextArea(4, 50); // Lets the user enter a query
+    JTextArea txtSQL = new JTextArea(4, 240); // Lets the user enter a query
 
     JTable sqlTab = new JTable() {
     	public String getToolTipText(MouseEvent e) {
@@ -607,7 +607,7 @@ public class SQLTool extends SwingTool {
         contentPane.setLayout(new BorderLayout(10, 10));
 
         JPanel cfgPanel = createCfgPanel();
-        JPanel btnPanel = createButtonPanel();
+        //JPanel btnPanel = createButtonPanel();
         JPanel sqlPanel = createSqlPanel();
 
         JSplitPane splitPane = createtSplitPanel(cfgPanel, sqlPanel);
@@ -694,7 +694,8 @@ public class SQLTool extends SwingTool {
         txtSQL.setText(defaultSql);
         txtSQL.setLineWrap(true);
         txtSQL.setBackground(DEFAULT_COLOR);
-
+        //txtSQL.setPreferredSize(new Dimension(240, this.getHeight()));
+        
         sqlList = new JList(new DefaultListModel());
         sqlList.setVisibleRowCount(5);
         sqlList.ensureIndexIsVisible(2);
@@ -738,12 +739,12 @@ public class SQLTool extends SwingTool {
         JSplitPane leftPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
                 new JScrollPane(txtSQL), new JScrollPane(sqlList));
         leftPane.setOneTouchExpandable(true);
-        leftPane.setDividerLocation(360);
+        leftPane.setDividerLocation(400);
 
         JSplitPane topPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true,
                 leftPane, sqlTreePane);
         topPane.setOneTouchExpandable(true);
-        topPane.setDividerLocation(0.8);
+        topPane.setDividerLocation(500);
         sqlPanel.add(topPane, BorderLayout.CENTER);
 
     }

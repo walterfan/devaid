@@ -27,7 +27,7 @@ http://www.google.com/ig/cities?output=xml&hl=zh-cn&country=cn]]>
 http://api.douban.com/book/subject/1220562
 ]]></url>
 </httpcommand>
-<httpcommand name="WriteDiary" method="post">
+<httpcommand name="WriteDiary" method="put">
 <url><![CDATA[
 http://api.douban.com/notes
 ]]></url>

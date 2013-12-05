@@ -18,7 +18,7 @@
 </appender>
 
   <logger name="com.github.walterfan">
-    <level value="debug"/> 
+    <level value="info"/> 
   </logger>
 <!--
   <logger name="java.sql">
