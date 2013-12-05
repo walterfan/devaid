@@ -239,11 +239,9 @@ public class HttpTool extends JFrame {
                     rg.clearSelection();
                     if ("post".equalsIgnoreCase(cmd.getMethod())) {
                         rb2.setSelected(true);
-                    } if ("put".equalsIgnoreCase(cmd.getMethod())) {
+                    } else if ("put".equalsIgnoreCase(cmd.getMethod())) {
                         rb3.setSelected(true);
-                        rb1.setSelected(false);
-                        logger.debug("why not working for http method=" + cmd.getMethod());
-                    } if ("delete".equalsIgnoreCase(cmd.getMethod())) {
+                      } else if ("delete".equalsIgnoreCase(cmd.getMethod())) {
                         rb4.setSelected(true);
                     }else {
                         rb1.setSelected(true);
@@ -481,9 +479,9 @@ public class HttpTool extends JFrame {
 
                 if ("post".equalsIgnoreCase(cmd.getMethod())) {
                     rb2.setSelected(true);
-                } if ("put".equalsIgnoreCase(cmd.getMethod())) {
+                } else if ("put".equalsIgnoreCase(cmd.getMethod())) {
                     rb3.setSelected(true);
-                } if ("delete".equalsIgnoreCase(cmd.getMethod())) {
+                } else if ("delete".equalsIgnoreCase(cmd.getMethod())) {
                     rb4.setSelected(true);
                 }else {
                     rb1.setSelected(true);
@@ -556,9 +554,9 @@ public class HttpTool extends JFrame {
 
             if ("post".equalsIgnoreCase(cmd.getMethod())) {
                 rb2.setSelected(true);
-            } if ("put".equalsIgnoreCase(cmd.getMethod())) {
+            } else if ("put".equalsIgnoreCase(cmd.getMethod())) {
                 rb3.setSelected(true);
-            } if ("delete".equalsIgnoreCase(cmd.getMethod())) {
+            } else if ("delete".equalsIgnoreCase(cmd.getMethod())) {
                 rb4.setSelected(true);
             }else {
                 rb1.setSelected(true);
