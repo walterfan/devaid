@@ -1,0 +1,6 @@
+{"steps": 
+[{"step":"dir","desc":"list files"},
+{"step":"date/t","desc":"display the current dater"},
+{"step":"time/t","desc":"display the current time"},
+]}
+
