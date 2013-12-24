@@ -1,16 +1,19 @@
 Developer Aid Toolkit 1.0
 -----------------------------
+* Http Tool
+* SQL Tool
 * Encode conversion Tool
-
 * Regular Expression Tool
 
-* SQL Tool
 
-* Http Tool
+# Some useful scripts
+* batch execution: script/batch.py
+* search and list/delete: script/searchfile.py 
 
 # Prerequisites
 * Install JDK 1.6 or above
 * Install Maven 2 or above
+* Python 2.5 above
 
 # Execution
 ## Steps
@@ -33,5 +36,5 @@ Developer Aid Toolkit 1.0
     limitations under the License.
 
 
-Thanks for using it
-Walter Fan
+  Thanks for using it
+  Walter Fan
