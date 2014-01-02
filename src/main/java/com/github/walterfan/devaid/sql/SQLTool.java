@@ -607,7 +607,7 @@ public class SQLTool extends SwingTool {
         contentPane.setLayout(new BorderLayout(10, 10));
 
         JPanel cfgPanel = createCfgPanel();
-        //JPanel btnPanel = createButtonPanel();
+        JPanel btnPanel = createButtonPanel();
         JPanel sqlPanel = createSqlPanel();
 
         JSplitPane splitPane = createtSplitPanel(cfgPanel, sqlPanel);
