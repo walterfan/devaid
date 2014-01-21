@@ -607,6 +607,7 @@ public class SQLTool extends SwingTool {
         contentPane.setLayout(new BorderLayout(10, 10));
 
         JPanel cfgPanel = createCfgPanel();
+        //move the button from panel to toolbar
         //JPanel btnPanel = createButtonPanel();
         JPanel sqlPanel = createSqlPanel();
 
@@ -746,6 +747,9 @@ public class SQLTool extends SwingTool {
         topPane.setOneTouchExpandable(true);
         topPane.setDividerLocation(500);
         sqlPanel.add(topPane, BorderLayout.CENTER);
+        
+        //add command button to tool bar and menu
+        createButtonPanel();
 
     }
 
