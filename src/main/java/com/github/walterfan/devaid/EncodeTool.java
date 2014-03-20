@@ -44,9 +44,10 @@ import org.apache.commons.lang.time.DateFormatUtils;
 
 import com.github.walterfan.util.EncodeUtils;
 import com.github.walterfan.util.Encryptor;
+import com.github.walterfan.util.GzipUtils;
+import com.github.walterfan.util.ParamUtils;
 import com.github.walterfan.util.RandomUtils;
 import com.github.walterfan.util.TimeZoneConv;
-import com.github.walterfan.util.GzipUtils;
 import com.github.walterfan.util.ZipUtils;
 import com.github.walterfan.util.swing.ActionHandlerFactory;
 import com.github.walterfan.util.swing.SwingTool;
@@ -369,15 +370,13 @@ public class EncodeTool extends SwingTool {
             }
         });
 
-        handlerMap.put("gzip-base64", new EncodeHandler() {
+        handlerMap.put("ParameterBase64", new EncodeHandler() {
             public String convert(String text) throws Exception {
-                return new String(Base64.encodeBase64(GzipUtils
-                        .gzip(text.getBytes())));
+                return ParamUtils.encode(text.trim());
             }
 
             public String decode(String text) throws Exception {
-                return new String(GzipUtils.gunzip(Base64
-                        .decodeBase64(text.getBytes())));
+                return ParamUtils.decode(text.trim());
             }
         });
         
