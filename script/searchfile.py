@@ -47,7 +47,13 @@ def search_file(fileexp='.+', subdir='', filehandler = print_file):
             result = regex.match(filename)    
             if result:
                 filehandler(os.path.join(root, filename))
-
+'''
+searchfile.py ".*~ml$"
+searchfile.py ".*~ml$" --delete
+searchfile.py "^\~\$.*" --delete
+searchfile.py "^\.\_.*" --delete
+searchfile.py "Thumbs\.db" --delete
+'''
 if __name__ == "__main__":
     usage = "usage: %prog [options] <regular_expression>"
     parser = OptionParser(usage=usage)
