@@ -140,7 +140,7 @@ public class DbOperator implements ConnectionOperator {
      * java.lang.Object[])
      */
     
-    public int update(String sql, Object[] params) throws SQLException {
+    public int update(String sql, Object... params) throws SQLException {
         return runner.update(getConnection(), sql, params);
     }
 

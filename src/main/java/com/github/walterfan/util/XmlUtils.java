@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.io.IOUtils;
@@ -14,11 +16,11 @@ import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 
 class XmlElementHandler {
+	public static Map<String, String> parameterMap = new HashMap<String, String>();
 	StringBuilder _sb = new StringBuilder();
 	
 	public void handleElement(Element nodeElement) throws DecoderException {
@@ -26,28 +28,46 @@ class XmlElementHandler {
 		System.out.println(node.getName() + " @ " + node.getPath());
 		System.out.println("\tattrubutes: "
 				+ ((Element) node).attributes());*/
+		
+		appendBeginTag(nodeElement);
+		
+		if(nodeElement.isTextOnly()) {
+			String key = nodeElement.getName();
+			String val = "";
+			Attribute att = nodeElement.attribute("isBase64");
+			if(att == null || att.getValue() == "0") {
+				val = nodeElement.getText();				
+			}
+			else {
+				val = new String(EncodeUtils.decodeBase64(nodeElement.getText().getBytes()));				
+			}
+			parameterMap.put(key, val);
+			_sb.append(val);
+		} else {
+			XmlUtils.treeWalk(nodeElement, this);
+		}
+		
+		appendEndTag(nodeElement);
+		_sb.append("\n");
+		
+	}
+	
+	public String toString() {
+		return _sb.toString();
+	}
+	
+	public void appendBeginTag(Element nodeElement) {		
 		_sb.append("<" + nodeElement.getName());
 		List<Attribute> attributes = nodeElement.attributes();
 		for(Attribute attribute: attributes) {
 			_sb.append(" " + attribute.asXML());
 		}
 		_sb.append(">");
-		if(nodeElement.isTextOnly()) {
-			Attribute att = nodeElement.attribute("isBase64");
-			if(att == null || att.getValue() == "0")
-				_sb.append(nodeElement.getText());
-			else {
-				String decodeText = new String(EncodeUtils.decodeBase64(nodeElement.getText().getBytes()));
-				_sb.append(decodeText);
-			}
-			_sb.append("</" + nodeElement.getName() + ">\n");
-		}
-		
-		
 	}
 	
-	public String toString() {
-		return _sb.toString();
+	
+	public void appendEndTag(Element nodeElement) {		
+		_sb.append("</" + nodeElement.getName() + ">");
 	}
 }
 
@@ -97,20 +117,26 @@ public class XmlUtils {
 
 	}
 	
-	public static void treeWalk(Document document, XmlElementHandler handler) {
-		treeWalk(document.getRootElement(), handler);
+	public static void treeWalk(Document document, XmlElementHandler handler) throws DecoderException {
+		Element root = document.getRootElement();
+		handler.appendBeginTag(root);
+		treeWalk(root, handler);
+		handler.appendEndTag(root);
 	}
 
-	public static void treeWalk(Element element, XmlElementHandler handler) {
-		for (int i = 0, size = element.nodeCount(); i < size; i++) {
+	public static void treeWalk(Element element, XmlElementHandler handler) throws DecoderException {
+		int size = element.nodeCount();
+		
+		if(size == 0) {
+			handler.handleElement(element);
+			return;
+		}
+		
+		for (int i = 0; i < size; i++) {
 			org.dom4j.Node node = element.node(i);
 			if (node instanceof Element) {
-				try {
-					handler.handleElement((Element)node);
-				} catch (DecoderException e) {
-					e.printStackTrace();
-				}
-				treeWalk((Element) node, handler);
+				handler.handleElement((Element)node);
+				//treeWalk((Element) node, handler);
 			} else {
 				//do nothing
 				//System.err.println("---see: " + node.asXML());
@@ -154,6 +180,14 @@ public class XmlUtils {
 
 	public static void main(String[] args) throws Exception {
 		
+        ConfigLoader cfgLoader = ConfigLoader.getInstance();
+        try {
+			cfgLoader.loadFromClassPath("devaid.properties");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return;
+		}
+    	
 		try {
        	 String filename = "S:\\Walter\\log\\clientparam_mc.txt";
        	 File file = new File(filename);
@@ -164,7 +198,9 @@ public class XmlUtils {
        	 XmlElementHandler handler = new XmlElementHandler();
        	 traversal(xml, handler);
        	 System.out.println(handler.toString());*/
-       	System.out.println(decode(new String(bytes)));
+       	 System.out.println(decode(new String(bytes)));
+       	
+       	ParamUtils.writeDB(cfgLoader, "insert_unify_docshow_mc", XmlElementHandler.parameterMap);
        } catch (Exception e) {
            e.printStackTrace();
        }

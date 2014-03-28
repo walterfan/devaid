@@ -1,5 +1,6 @@
 package com.github.walterfan.util.db;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,8 @@ import java.sql.Statement;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.github.walterfan.util.ConfigLoader;
 
 import static java.lang.System.out;
 
@@ -220,12 +223,18 @@ public class DbConn implements ConnectionHolder {
     public static void main(String[] args) {
 
         if(args.length < 3) {
-            System.out.println("Arguments: url username password");
-            return;
+            System.out.println("Arguments: url username password, load from configuration by default");
+            //return;
         }
-        
-        DbConfig dbConn = new DbConfig(args[0], args[1],args[2]);
+        ConfigLoader cfgLoader = ConfigLoader.getInstance();
+        try {
+			cfgLoader.loadFromClassPath("devaid.properties");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+        DbConfig dbCfg = new DbConfig(cfgLoader.get("db_driverClass"), cfgLoader.get("db_url"), cfgLoader.get("db_username"),cfgLoader.get("db_password"));
         ConnectionProvider provider = new DriverManagerProvider();
+        provider.setDbConfig(dbCfg);
         DbConn dc = new DbConn(provider);
 
         try {
@@ -244,6 +253,8 @@ public class DbConn implements ConnectionHolder {
             dc.execute(strsql);
         } catch (Exception e) {
             e.printStackTrace();
+            System.err.println(cfgLoader.get("db_driverClass") + "," + cfgLoader.get("db_url") 
+            		+ "," + cfgLoader.get("db_username") + "," + cfgLoader.get("db_password"));
         } finally {
             dc.closeConnection();
         }

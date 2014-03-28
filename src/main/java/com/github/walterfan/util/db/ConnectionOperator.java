@@ -86,7 +86,7 @@ public interface ConnectionOperator extends ConnectionHolder {
      * @throws SQLException
      *             jdbc exception
      */
-    int update(String sql, Object[] params) throws SQLException;
+    int update(String sql,Object... params) throws SQLException;
 
     /**
      * Execute a batch of SQL INSERT, UPDATE, or DELETE queries.

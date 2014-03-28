@@ -326,6 +326,17 @@ public class EncodeTool extends SwingTool {
                  return new String(EncodeUtils.byte2Hex(Base64.decodeBase64(text.getBytes())));
             }
         });
+        
+        handlerMap.put("Hex-Ascii", new EncodeHandler() {
+            public String convert(String text) throws Exception {
+                     return new String(EncodeUtils.hex2Byte(text));
+            }
+
+            public String decode(String text) throws Exception {
+                 return new String(EncodeUtils.byte2Hex(text.getBytes()));
+            }
+        });
+        
         handlerMap.put("URL", new EncodeHandler() {
             public String convert(String text) throws Exception {
                 return EncodeUtils.urlEncode(text);
