@@ -61,7 +61,7 @@ public class ToolKit extends JFrame implements ChangeListener {
     public static void start(String[] args) {
   
         ToolKit frameContainer = new ToolKit(
-                "Development Aid Tool Kits v1.0 - Walter Fan Ya Min");
+                "Development Aid Tool Kits v1.3 - Walter Fan Ya Min");
 
         frameContainer.addFrame(new HttpTool("Http Tool"));
         
@@ -77,9 +77,12 @@ public class ToolKit extends JFrame implements ChangeListener {
         encodeTool.init();
         frameContainer.addFrame(encodeTool);
         
-        JFrame tzTool = new TimeZoneConverter();
-        frameContainer.addFrame(tzTool);
+        //JFrame tzTool = new TimeZoneConverter();
+        //frameContainer.addFrame(tzTool);
 
+        CassandraTool kvTool = new CassandraTool("Cassandra Tool v1.0");
+        kvTool.init();
+        frameContainer.addFrame(kvTool);
         
         SwingUtils.run(frameContainer, 1000, 700);
     }

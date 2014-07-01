@@ -1,6 +1,8 @@
 package com.github.walterfan.util;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RandomUtils {
@@ -48,6 +50,18 @@ public class RandomUtils {
             sb.append(chars.charAt(nrand));
         }
         return sb.toString();
+    }
+    
+    public static List<Object> randomSelect(List<Object> elements,int nCount) {
+    	List<Object> results = new ArrayList<Object>(nCount);
+        int nSize = elements.size();
+    	int nrand;
+        
+        for (int i = 0; i < nCount; i++) {
+            nrand = Math.abs(rand.nextInt(nSize));
+            results.add(elements.get(nrand));
+        }
+        return results;
     }
     
     public static String getRandomHEX(int size) {

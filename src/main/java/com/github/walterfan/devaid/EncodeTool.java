@@ -381,7 +381,7 @@ public class EncodeTool extends SwingTool {
             }
         });
 
-        handlerMap.put("ParameterBase64", new EncodeHandler() {
+        handlerMap.put("OldParameterBase64", new EncodeHandler() {
             public String convert(String text) throws Exception {
                 return ParamUtils.encode(text.trim());
             }
