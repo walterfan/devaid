@@ -44,7 +44,7 @@ public class SwingAppender extends AppenderSkeleton {
 
 
 	/*
-	 * ﻿ * (non-Javadoc) ﻿ * ﻿ * @see org.apache.log4j.Appender#close() ﻿
+	 * 
 	 */
 	public void close() {
 		// Opportunity for the appender ui to do any cleanup.
