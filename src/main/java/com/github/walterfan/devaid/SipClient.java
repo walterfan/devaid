@@ -1,7 +1,7 @@
 package com.github.walterfan.devaid;
 
-//import gov.nist.javax.sip.SipStackExt;
-//import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;
+import gov.nist.javax.sip.SipStackExt;
+import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -50,7 +50,9 @@ import javax.sip.message.Response;
 
 public class SipClient implements SipListener {
 
-    private static SipProvider sipProvider;
+    private static final String TARGET_SERVER = "127.0.0.1:5062";
+
+	private static SipProvider sipProvider;
     private static AddressFactory addressFactory;
     private static MessageFactory messageFactory;
     private static HeaderFactory headerFactory;
@@ -60,7 +62,10 @@ public class SipClient implements SipListener {
     private ClientTransaction inviteTid;
     private Dialog dialog;
     long invco = 1;
-    String peerHostPort = "127.0.0.1:5070";
+    
+    String localHost = "127.0.0.1";
+	int localPort = 7080;    
+    String peerHostPort = TARGET_SERVER;
     String transport = "udp";
    
 
@@ -170,17 +175,91 @@ public class SipClient implements SipListener {
         }
     }
 
+    public Request createRegister(String callId) throws ParseException,
+    InvalidArgumentException {
+        String fromName = "tas";
+        String fromSipAddress = "as1.waltersite.com";
+        String fromDisplayName = "tas";
+
+        String toSipAddress = "sip:012345678@waltersite.com";
+        String toUser = "usr012345678";
+        String toDisplayName = "usr012345678";
+
+        // create >From Header
+        SipURI fromAddress = addressFactory.createSipURI(fromName,
+                fromSipAddress);
+
+        Address fromNameAddress = addressFactory.createAddress(fromAddress);
+        fromNameAddress.setDisplayName(fromDisplayName);
+        FromHeader fromHeader = headerFactory.createFromHeader(fromNameAddress,
+                "12345");
+
+        // create To Header
+        SipURI toAddress = addressFactory.createSipURI(toUser, toSipAddress);
+        Address toNameAddress = addressFactory.createAddress(toAddress);
+        toNameAddress.setDisplayName(toDisplayName);
+        ToHeader toHeader = headerFactory.createToHeader(toNameAddress, null);
+
+        // create Request URI
+        SipURI requestURI = addressFactory.createSipURI(toUser, peerHostPort);
+
+        // Create ViaHeaders
+        ArrayList<ViaHeader> viaHeaders = new ArrayList<ViaHeader>();
+        ViaHeader viaHeader = headerFactory.createViaHeader("127.0.0.1",
+                sipProvider.getListeningPoint(transport).getPort(), transport,
+                null);
+        // add via headers
+        viaHeaders.add(viaHeader);
+
+           // Create a new CallId header
+        CallIdHeader callIdHeader;
+        callIdHeader = sipProvider.getNewCallId();
+        if (callId.trim().length() > 0)
+            callIdHeader.setCallId(callId);
+
+        // Create a new Cseq header
+        CSeqHeader cSeqHeader = headerFactory.createCSeqHeader(invco,
+                Request.REGISTER);
+
+        // Create a new MaxForwardsHeader
+        MaxForwardsHeader maxForwards = headerFactory
+                .createMaxForwardsHeader(70);
+
+        // Create the request.
+        Request request = messageFactory.createRequest(requestURI,
+                Request.REGISTER, callIdHeader, cSeqHeader, fromHeader, toHeader,
+                viaHeaders, maxForwards);
+        // Create contact headers
+        String host = peerHostPort;
+
+        SipURI contactUrl = addressFactory.createSipURI(fromName, host);
+        contactUrl.setPort(udpListeningPoint.getPort());
+
+        // Create the contact name address.
+        SipURI contactURI = addressFactory.createSipURI(fromName, host);
+        contactURI.setPort(sipProvider.getListeningPoint(transport).getPort());
+
+        Address contactAddress = addressFactory.createAddress(contactURI);
+
+        // Add the contact address.
+        contactAddress.setDisplayName(fromName);
+
+        contactHeader = headerFactory.createContactHeader(contactAddress);
+        request.addHeader(contactHeader);
+
+        return request;
+    }
     
 
     public Request createInvite(String callId) throws ParseException,
             InvalidArgumentException {
-        String fromName = "BigGuy";
-        String fromSipAddress = "here.com";
-        String fromDisplayName = "The Master Blaster";
+        String fromName = "alice";
+        String fromSipAddress = "alicesite.com";
+        String fromDisplayName = "alice";
 
-        String toSipAddress = "there.com";
-        String toUser = "LittleGuy";
-        String toDisplayName = "The Little Blister";
+        String toSipAddress = "bobsite.com";
+        String toUser = "bob";
+        String toDisplayName = "Bob";
 
         // create >From Header
         SipURI fromAddress = addressFactory.createSipURI(fromName,
@@ -266,7 +345,8 @@ public class SipClient implements SipListener {
         return request;
     }
 
-    public void init() {
+    public void init(String targetServer) {
+    	this.peerHostPort = targetServer;
         SipFactory sipFactory = null;
         sipStack = null;
         sipFactory = SipFactory.getInstance();
@@ -302,8 +382,9 @@ public class SipClient implements SipListener {
             headerFactory = sipFactory.createHeaderFactory();
             addressFactory = sipFactory.createAddressFactory();
             messageFactory = sipFactory.createMessageFactory();
-            udpListeningPoint = sipStack.createListeningPoint("127.0.0.1",
-                    5060, "udp");
+
+			udpListeningPoint = sipStack.createListeningPoint(localHost,
+                    localPort, "udp");
             sipProvider = sipStack.createSipProvider(udpListeningPoint);
             SipClient listener = this;
             sipProvider.addSipListener(listener);
@@ -320,24 +401,28 @@ public class SipClient implements SipListener {
 
         try {
             System.out.println("SipClient Process ");
-            Request request = this.createInvite("");
+            Request request = this.createRegister("qwertyuiop");
             // Create the client transaction.
             inviteTid = sipProvider.getNewClientTransaction(request);
             // send the request out.
             inviteTid.sendRequest();
             System.out
-                    .println("INVITE with no Authorization sent:\n" + request);
+                    .println("Register with no Authorization sent:\n" + request);
             dialog = inviteTid.getDialog();
 
         } catch (Exception e) {
-            System.out.println("Creating call CreateInvite()");
-            System.out.println(e.getMessage());
+            System.err.println("Creating call createRegister()");
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
 
     public static void main(String args[]) {
-        new SipClient().init();
+    	String host = TARGET_SERVER;
+    	if(args.length > 0)
+    		host = args[0];
+    		
+        new SipClient().init(host);
 
     }
 
