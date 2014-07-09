@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# UDP Echo Server -  udpserver.py
-# code by www.cppblog.com/jerryma
+
 import socket, traceback, sys
 
 host = '127.0.0.1'

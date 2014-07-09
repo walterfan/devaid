@@ -1,8 +1,6 @@
 #!/usr/bin/env python
-# UDP Client - udpclient.py
-# code by www.cppblog.com/jerryma
+
 import socket, sys
-import os,sys
 
 host = "127.0.0.1"
 nPort = 5062

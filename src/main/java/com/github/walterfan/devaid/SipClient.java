@@ -40,6 +40,8 @@ import javax.sip.message.MessageFactory;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
 
+import com.github.walterfan.util.RandomUtils;
+
 /**
  * This class is a UAC template. Shootist is the guy that shoots and shootme is
  * the guy that gets shot.
@@ -50,8 +52,14 @@ import javax.sip.message.Response;
 
 public class SipClient implements SipListener {
 
+    private static final String DOMAIN_NAME = "localhost";
+   
     private static final String TARGET_SERVER = "127.0.0.1:5062";
-
+    
+	private static String localHost = "127.0.0.1";
+	
+	private static int localPort = 7080; 
+	
 	private static SipProvider sipProvider;
     private static AddressFactory addressFactory;
     private static MessageFactory messageFactory;
@@ -62,9 +70,7 @@ public class SipClient implements SipListener {
     private ClientTransaction inviteTid;
     private Dialog dialog;
     long invco = 1;
-    
-    String localHost = "127.0.0.1";
-	int localPort = 7080;    
+        
     String peerHostPort = TARGET_SERVER;
     String transport = "udp";
    
@@ -175,15 +181,15 @@ public class SipClient implements SipListener {
         }
     }
 
-    public Request createRegister(String callId) throws ParseException,
+    public Request createSipRequest(String callId, String sipMethod) throws ParseException,
     InvalidArgumentException {
-        String fromName = "tas";
-        String fromSipAddress = "as1.waltersite.com";
-        String fromDisplayName = "tas";
+        String fromName = "012345678";
+        String fromSipAddress = DOMAIN_NAME;
+        String fromDisplayName = null;
 
-        String toSipAddress = "sip:012345678@waltersite.com";
-        String toUser = "usr012345678";
-        String toDisplayName = "usr012345678";
+        String toSipAddress = DOMAIN_NAME;
+        String toUser = "012345678";
+        String toDisplayName = null;
 
         // create >From Header
         SipURI fromAddress = addressFactory.createSipURI(fromName,
@@ -192,7 +198,7 @@ public class SipClient implements SipListener {
         Address fromNameAddress = addressFactory.createAddress(fromAddress);
         fromNameAddress.setDisplayName(fromDisplayName);
         FromHeader fromHeader = headerFactory.createFromHeader(fromNameAddress,
-                "12345");
+                "30bc806257ab0c78");
 
         // create To Header
         SipURI toAddress = addressFactory.createSipURI(toUser, toSipAddress);
@@ -201,11 +207,11 @@ public class SipClient implements SipListener {
         ToHeader toHeader = headerFactory.createToHeader(toNameAddress, null);
 
         // create Request URI
-        SipURI requestURI = addressFactory.createSipURI(toUser, peerHostPort);
+        SipURI requestURI = addressFactory.createSipURI(null, peerHostPort);
 
         // Create ViaHeaders
         ArrayList<ViaHeader> viaHeaders = new ArrayList<ViaHeader>();
-        ViaHeader viaHeader = headerFactory.createViaHeader("127.0.0.1",
+        ViaHeader viaHeader = headerFactory.createViaHeader(localHost,
                 sipProvider.getListeningPoint(transport).getPort(), transport,
                 null);
         // add via headers
@@ -219,7 +225,7 @@ public class SipClient implements SipListener {
 
         // Create a new Cseq header
         CSeqHeader cSeqHeader = headerFactory.createCSeqHeader(invco,
-                Request.REGISTER);
+                sipMethod);
 
         // Create a new MaxForwardsHeader
         MaxForwardsHeader maxForwards = headerFactory
@@ -227,26 +233,34 @@ public class SipClient implements SipListener {
 
         // Create the request.
         Request request = messageFactory.createRequest(requestURI,
-                Request.REGISTER, callIdHeader, cSeqHeader, fromHeader, toHeader,
-                viaHeaders, maxForwards);
+                sipMethod, callIdHeader, cSeqHeader, fromHeader, toHeader, viaHeaders, maxForwards);
+
+        
+        System.out.println("createSipRequest:  " + sipMethod);
         // Create contact headers
         String host = peerHostPort;
 
-        SipURI contactUrl = addressFactory.createSipURI(fromName, host);
+        SipURI contactUrl = addressFactory.createSipURI(null, host);
         contactUrl.setPort(udpListeningPoint.getPort());
 
         // Create the contact name address.
-        SipURI contactURI = addressFactory.createSipURI(fromName, host);
+        SipURI contactURI = addressFactory.createSipURI(null, host);
         contactURI.setPort(sipProvider.getListeningPoint(transport).getPort());
 
         Address contactAddress = addressFactory.createAddress(contactURI);
 
         // Add the contact address.
-        contactAddress.setDisplayName(fromName);
-
+        //contactAddress.setDisplayName(fromName);
+        
         contactHeader = headerFactory.createContactHeader(contactAddress);
+        contactHeader.setExpires(3600);
+        
         request.addHeader(contactHeader);
 
+        ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader("application", "sdp");
+        byte[] contents = {};
+        request.setContent(contents, contentTypeHeader);
+        
         return request;
     }
     
@@ -281,7 +295,7 @@ public class SipClient implements SipListener {
 
         // Create ViaHeaders
         ArrayList<ViaHeader> viaHeaders = new ArrayList<ViaHeader>();
-        ViaHeader viaHeader = headerFactory.createViaHeader("127.0.0.1",
+        ViaHeader viaHeader = headerFactory.createViaHeader(localHost,
                 sipProvider.getListeningPoint(transport).getPort(), transport,
                 null);
         // add via headers
@@ -310,7 +324,7 @@ public class SipClient implements SipListener {
                 Request.INVITE, callIdHeader, cSeqHeader, fromHeader, toHeader,
                 viaHeaders, maxForwards);
         // Create contact headers
-        String host = "127.0.0.1";
+        String host = localHost;
 
         SipURI contactUrl = addressFactory.createSipURI(fromName, host);
         contactUrl.setPort(udpListeningPoint.getPort());
@@ -345,10 +359,10 @@ public class SipClient implements SipListener {
         return request;
     }
 
-    public void init(String targetServer) {
+    public void doSipRequest(String targetServer, String sipMethod) {
     	this.peerHostPort = targetServer;
         SipFactory sipFactory = null;
-        sipStack = null;
+
         sipFactory = SipFactory.getInstance();
         sipFactory.setPathName("gov.nist");
 
@@ -401,7 +415,7 @@ public class SipClient implements SipListener {
 
         try {
             System.out.println("SipClient Process ");
-            Request request = this.createRegister("qwertyuiop");
+            Request request = this.createSipRequest(RandomUtils.getRandomLetters(8)+ "@" + peerHostPort, sipMethod);
             // Create the client transaction.
             inviteTid = sipProvider.getNewClientTransaction(request);
             // send the request out.
@@ -417,14 +431,6 @@ public class SipClient implements SipListener {
         }
     }
 
-    public static void main(String args[]) {
-    	String host = TARGET_SERVER;
-    	if(args.length > 0)
-    		host = args[0];
-    		
-        new SipClient().init(host);
-
-    }
 
     public void processIOException(IOExceptionEvent exceptionEvent) {
         System.out.println("IOException happened for "
@@ -441,6 +447,29 @@ public class SipClient implements SipListener {
     public void processDialogTerminated(
             DialogTerminatedEvent dialogTerminatedEvent) {
         System.out.println("dialogTerminatedEvent");
+
+    }
+
+    public static void main(String args[]) {
+    	String host = TARGET_SERVER;
+    	String method = Request.REGISTER;
+    	if(args.length > 0)
+    		host = args[0];
+    	if(args.length > 1) {
+
+    		if(args[1].equals("register")) {
+    			method = Request.REGISTER;
+    		}
+    		else if(args[1].equals("options")) {
+    			method = Request.OPTIONS;
+
+    		}
+    	}
+    	if(args.length > 2) {
+    		localHost = args[2];
+    	}
+    	System.out.println("send request to  " + host + " by " + method);
+        new SipClient().doSipRequest(host, method);
 
     }
 }
