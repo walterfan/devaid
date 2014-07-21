@@ -1,7 +1,7 @@
 package com.github.walterfan.devaid;
 
-import gov.nist.javax.sip.SipStackExt;
-import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;
+//import gov.nist.javax.sip.SipStackExt;
+//import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;
 
 import java.text.ParseException;
 import java.util.ArrayList;

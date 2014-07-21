@@ -5,7 +5,9 @@ import socket, traceback, sys
 host = '127.0.0.1'
 port = 5062
 if(len(sys.argv) > 1):
-    port = sys.argv[1]
+    port = int(sys.argv[1])
+if(len(sys.argv) > 1):
+    host = sys.argv[2]
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
