@@ -59,7 +59,7 @@ public class SipClient implements SipListener {
 	private static String localHost = "127.0.0.1";
 	
 	private static int localPort = 7080; 
-	
+	   
 	private static SipProvider sipProvider;
     private static AddressFactory addressFactory;
     private static MessageFactory messageFactory;
