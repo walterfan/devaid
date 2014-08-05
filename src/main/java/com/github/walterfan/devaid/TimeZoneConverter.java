@@ -32,6 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang.time.DateFormatUtils;
 
 import com.github.walterfan.util.TimeZoneConv;
+import com.github.walterfan.util.swing.SwingTool;
 import com.github.walterfan.util.swing.SwingUtils;
 
 
@@ -41,7 +42,7 @@ import com.github.walterfan.util.swing.SwingUtils;
  * @author walter.fan@gmail.com
  */
 
-public class TimeZoneConverter extends JFrame implements ActionListener {
+public class TimeZoneConverter extends SwingTool implements ActionListener {
 	/**
 	 * 
 	 */
@@ -244,7 +245,11 @@ public class TimeZoneConverter extends JFrame implements ActionListener {
         });
 	}
 
-
+	@Override
+	public void initComponents() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	private JList createTimeZoneList(int index) {
 		JList timeZoneList = new JList(timeZones);
@@ -311,4 +316,6 @@ public class TimeZoneConverter extends JFrame implements ActionListener {
 		JFrame f = new TimeZoneConverter();
 		SwingUtils.run(f, 800, 600);
 	}
+
+	
 }

@@ -84,6 +84,9 @@ public class ToolKit extends JFrame implements ChangeListener {
         kvTool.init();
         frameContainer.addFrame(kvTool);
         
+        JFrame tzTool = new TimeZoneConverter();
+		frameContainer.addFrame(tzTool);
+		
         SwingUtils.run(frameContainer, 1000, 700);
     }
 }
