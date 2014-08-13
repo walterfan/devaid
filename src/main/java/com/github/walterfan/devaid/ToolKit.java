@@ -76,13 +76,15 @@ public class ToolKit extends JFrame implements ChangeListener {
         EncodeTool encodeTool = new EncodeTool("Encode Tool");
         encodeTool.init();
         frameContainer.addFrame(encodeTool);
-        
-        //JFrame tzTool = new TimeZoneConverter();
-        //frameContainer.addFrame(tzTool);
 
-        CassandraTool kvTool = new CassandraTool("Cassandra Tool v1.0");
-        kvTool.init();
-        frameContainer.addFrame(kvTool);
+        //CassandraTool kvTool = new CassandraTool("Cassandra Tool v1.0");
+        //kvTool.init();
+        //frameContainer.addFrame(kvTool);
+        
+        JmsTool jmsTool = new JmsTool("JMS Tool v1.0");
+        jmsTool.init();
+        frameContainer.addFrame(jmsTool);
+
         
         JFrame tzTool = new TimeZoneConverter();
 		frameContainer.addFrame(tzTool);

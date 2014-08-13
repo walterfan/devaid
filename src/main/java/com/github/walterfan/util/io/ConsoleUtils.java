@@ -1,6 +1,7 @@
 package com.github.walterfan.util.io;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -28,4 +29,42 @@ public class ConsoleUtils {
             return strInput;
         }
 
+        public static void sleepQueitly(long ms) {
+    		try {
+    			Thread.sleep(ms);
+    		} catch (Exception ex) { 
+    			// Ignore the exception
+    		}
+    	}
+
+    	public static void closeQuietly(Closeable ca) {
+    		try {
+    			if (ca != null)
+    				ca.close();
+    		} catch (Exception ex) { 
+    			// ignore the exception
+    		}
+    	}
+
+    	public static String wait4Input(String prompt) {
+    		System.out.print(prompt);
+    		System.out.flush();
+    		return wait4Input();
+    	}
+
+    	public static String wait4Input() {
+    		InputStreamReader is = null;
+    		String ret = null;
+    		try {
+    			is = new InputStreamReader(System.in);
+    			BufferedReader in = new BufferedReader(is);
+    			ret = in.readLine();
+    		} catch (IOException e) {
+    			System.err.println(e.getMessage());
+    		} finally {
+    			//need not close Sytem.in
+    			//closeQuietly(is);
+    		}
+    		return ret;
+    	}
 }
