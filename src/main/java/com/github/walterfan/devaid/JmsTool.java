@@ -344,7 +344,7 @@ public class JmsTool extends SwingTool implements MessageListener {
         pane.add(SwingUtils.createVTextComponentPane("Receive: ",
                 this.txtAreaReceive), "1, 3, 1, 4, F, F");
         pane.add(statusBar_, "0,5,1,5,F,F");
-        statusBar_.setText("welcome from walter");
+        statusBar_.setText("You can use it as publisher, consumer and broker");
         
         btnStart.addActionListener(new StartHandler());
         btnStop.addActionListener(new StopHandler());

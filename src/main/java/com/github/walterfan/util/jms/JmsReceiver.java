@@ -6,11 +6,13 @@ import javax.jms.MessageListener;
 import javax.jms.Queue;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.jms.listener.SimpleMessageListenerContainer;
+import org.springframework.jms.connection.JmsTransactionManager;
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.github.walterfan.util.io.ConsoleUtils;
 
@@ -24,7 +26,9 @@ public class JmsReceiver implements IJmsReceiver {
 	
 	private Queue destination;
 	
-	private SimpleMessageListenerContainer msgContainer;
+	//private SimpleMessageListenerContainer msgContainer;
+	
+	private DefaultMessageListenerContainer msgContainer;
 
 	private MessageListener msgListener;
 	
@@ -114,7 +118,13 @@ public class JmsReceiver implements IJmsReceiver {
 			factory.setPassword(password);
 		}
 		
-		this.msgContainer = new SimpleMessageListenerContainer();
+		
+		//JmsTransactionManager transactionManager = new JmsTransactionManager();
+		
+		this.msgContainer = new DefaultMessageListenerContainer();	
+		this.msgContainer.setSessionAcknowledgeMode(ActiveMQSession.INDIVIDUAL_ACKNOWLEDGE);
+		//this.msgContainer.setTransactionManager(transactionManager);
+		//this.msgContainer = new SimpleMessageListenerContainer();
 		this.msgContainer .setConnectionFactory(factory);
 		this.msgContainer .setDestination(this.destination);
 		this.msgContainer .setMessageListener(this);
@@ -123,7 +133,7 @@ public class JmsReceiver implements IJmsReceiver {
 
 
 	public static void main(String[] args) throws Exception {
-		JmsReceiver receiver = new JmsReceiver("tcp://localhost:61616");
+		JmsReceiver receiver = new JmsReceiver("failover:(tcp://10.224.57.155:61616,tcp://10.224.57.207:61616)?randomize=false");
 		receiver.setMessageListener(new MessageListener() {
 
 			public void onMessage(Message arg0) {
@@ -132,7 +142,7 @@ public class JmsReceiver implements IJmsReceiver {
 			}
 			
 		});
-		receiver.setDestinationName("WalterTestQueue");
+		receiver.setDestinationName("USERDATAQUEUE_QZWD");
 		receiver.init();
 		receiver.start();
 		ConsoleUtils.wait4Input("stop?");

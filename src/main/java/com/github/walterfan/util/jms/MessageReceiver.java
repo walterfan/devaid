@@ -1,18 +1,25 @@
 package com.github.walterfan.util.jms;
 
 
+import java.util.concurrent.TimeUnit;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.listener.AbstractMessageListenerContainer;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
+
+import com.github.walterfan.util.io.ConsoleUtils;
 
 /**
  * @author walter
@@ -98,7 +105,8 @@ public class MessageReceiver implements IJmsReceiver {
 		DefaultMessageListenerContainer aContainer = new DefaultMessageListenerContainer();
 		aContainer.setConnectionFactory(factory);
 		aContainer.setDestination(queue);
-		aContainer.setSessionTransacted(true);
+		//aContainer.setSessionTransacted(true);
+		aContainer.setSessionAcknowledgeMode(ActiveMQSession.INDIVIDUAL_ACKNOWLEDGE);
 		//Note that any ordering guarantees are lost once multiple consumers are registered.
 		//In general, stick with 1 consumer for low-volume queues
 		aContainer.setConcurrentConsumers(1);
@@ -115,4 +123,42 @@ public class MessageReceiver implements IJmsReceiver {
 		
 	}
 	
+	static int receivedCount = 0;
+	
+	public static void main(String[] args) throws Exception {
+		
+		MessageReceiver receiver = new MessageReceiver();
+		receiver.init("tcp://10.224.57.155:61616", "WalterTestQueue");
+		receiver.setMessageListener(new MessageListener() {
+
+			public void onMessage(Message msg) {
+				receivedCount ++;
+				try {
+					System.out.println(receivedCount + "received: " + msg);
+					if(msg instanceof ObjectMessage) {
+						ObjectMessage objMsg = (ObjectMessage)msg;
+						System.out.println("object: " + objMsg.getObject());
+						if(1 == receivedCount || 3 == receivedCount) {
+							objMsg.acknowledge();
+							System.out.println("ack: " + objMsg.getObject());
+						}
+					} else if(msg instanceof TextMessage) {
+						TextMessage txtMsg = (TextMessage)msg;
+						System.out.println("object: " + txtMsg.getText());
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
+		//receiver.setDestinationName("USERDATAQUEUE_QZWD");
+		receiver.init();
+		receiver.start();
+		TimeUnit.SECONDS.sleep(1);
+		receiver.stop();
+	}
+
 }

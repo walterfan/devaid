@@ -33,6 +33,14 @@ public class AppTest
      */
     public void testApp()
     {
+    	String q= "0.8";
+    	double num = Double.parseDouble(q);
+    	String q2= "0.7";
+    	double num2 = Double.parseDouble(q2);
+    	
+    	
+    	System.out.println(num + ", " + num2);
+    	System.out.println(num > num2);
         assertTrue( true );
     }
 }
