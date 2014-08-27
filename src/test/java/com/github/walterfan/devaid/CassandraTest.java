@@ -37,19 +37,5 @@ public class CassandraTest {
       cluster.close();
    }
 
-   public static void main(String[] args) {
-	   CassandraTest client = new CassandraTest();
-       client.connect("10.224.57.163");
-       ResultSet rset = client.executeSql("select seqnumber, maccindex, maccuris, expiretime, registertime from globalivr.wbxtelemacc limit 10");
 
-       for(Row row: rset) {
-    	   System.out.println(String.format("%-30s,\t%-2s,\t%-30s,\t%-4d,\t%-10d\n", row.getString(0),
-    			   row.getString(1), 
-    			   row.getString(2),
-    			   row.getLong(3), 
-    			   row.getLong(4)));
-       }
-       
-       client.close();
-   }
 }
