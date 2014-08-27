@@ -4,6 +4,7 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Host;
 import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
 
@@ -39,8 +40,15 @@ public class CassandraTest {
    public static void main(String[] args) {
 	   CassandraTest client = new CassandraTest();
        client.connect("10.224.57.163");
-       client.executeSql("CREATE KEYSPACE waltertest WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };");
-       client.executeSql("CREATE TABLE waltertest.users ( userid bigint PRIMARY KEY, email text, username text);");
+       ResultSet rset = client.executeSql("select seqnumber, maccindex, maccuris, expiretime, registertime from globalivr.wbxtelemacc limit 10");
+
+       for(Row row: rset) {
+    	   System.out.println(String.format("%-30s,\t%-2s,\t%-30s,\t%-4d,\t%-10d\n", row.getString(0),
+    			   row.getString(1), 
+    			   row.getString(2),
+    			   row.getLong(3), 
+    			   row.getLong(4)));
+       }
        
        client.close();
    }
