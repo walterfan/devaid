@@ -29,7 +29,8 @@ public class WebApp extends HttpServlet {
 	private static final String JSP_WIKI_PATH = "/wiki";
 	private static final String JSP_WIKI_TMP = "/workspace/tmp";
 	private static final String HOME_PAGE = "index.html";
-
+	private static final String HOME_FOLDER = "/workspace/cpp/cwhat/site";
+	
 	private static Server _server;
 	private static List<Handler> _handles = new ArrayList<Handler>(5);
 
@@ -41,19 +42,24 @@ public class WebApp extends HttpServlet {
 		if( args.length > 2) {
 			launchWebApp(nPort, args[1], args[2]);
 			return;
-		} else if( args.length == 0) {
+		} 
+	/*	else if( args.length == 0) {
 			launchWebApp(nPort, JSP_WIKI_DIR, JSP_WIKI_TMP);
 			return;
-		}
+		}*/
 
-		addFileServer(args);
-		addServlet(args);
+		//addFileServer(args);
+		//addServlet(args);
 		// addWebService(args);
-
+		
+		
 		HandlerList handlers = new HandlerList();
 		for (Handler aHandler : _handles)
 			handlers.addHandler(aHandler);
-
+		
+		handlers.addHandler(launchWebApp(nPort, JSP_WIKI_DIR, JSP_WIKI_TMP));
+		handlers.addHandler(addFileServer(args));
+		
 		_server.setHandler(handlers);
 		_server.start();
 		_server.join();
@@ -68,25 +74,27 @@ public class WebApp extends HttpServlet {
 
 	}
 
-	public static void addFileServer(String[] args) throws Exception {
+	public static Handler addFileServer(String[] args) throws Exception {
 
 		ResourceHandler resource_handler = new ResourceHandler();
 
 		resource_handler.setDirectoriesListed(true);
 		resource_handler.setWelcomeFiles(new String[] { HOME_PAGE });
-		resource_handler.setResourceBase(".");
+		resource_handler.setResourceBase(HOME_FOLDER);
 
-		_handles.add(resource_handler);
-		_handles.add(new DefaultHandler());
+		//_handles.add(resource_handler);
+		//_handles.add(new DefaultHandler());
+		return resource_handler;
 
 	}
 
-	public static void addServlet(String[] args) throws Exception {
+	public static Handler addServlet(String[] args) throws Exception {
 
 		ServletHandler handler = new ServletHandler();
 		// _server.setHandler(handler);
 		handler.addServletWithMapping(WebApp.class, "/cmd");
-		_handles.add(handler);
+		//_handles.add(handler);
+		return handler;
 	}
 
 	@Override
@@ -97,7 +105,7 @@ public class WebApp extends HttpServlet {
 		response.getWriter().println("<h1>Command Executor</h1>");
 	}
 
-	public static void launchWebApp(int port, String warPath, String tmpPath) throws Exception {
+	public static Handler launchWebApp(int port, String warPath, String tmpPath) throws Exception {
 		// int port = Integer.parseInt(System.getProperty("port", "8080"));
 		//Server server = new Server(port);
 
@@ -117,10 +125,10 @@ public class WebApp extends HttpServlet {
 		// if the temp directory gets cleaned periodically.
 		// Your build scripts should remove this directory between deployments
 		webapp.setTempDirectory(new File(tmpPath));
-
-		_server.setHandler(webapp);
-		_server.start();
-		_server.join();
+		return webapp;
+		//_server.setHandler(webapp);
+		//_server.start();
+		//_server.join();
 	}
 	
 
