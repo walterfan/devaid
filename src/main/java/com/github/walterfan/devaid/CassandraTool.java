@@ -31,11 +31,11 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 
+import com.datastax.driver.core.ResultSet;
 import com.github.walterfan.util.ByteUtil;
 import com.github.walterfan.util.IKvStore;
+import com.github.walterfan.util.cassandra.CassandraConnection;
 import com.github.walterfan.util.swing.ActionHandlerFactory;
 import com.github.walterfan.util.swing.BinaryFileLoadHandler;
 import com.github.walterfan.util.swing.FileSelectHandler;
@@ -51,7 +51,8 @@ public class CassandraTool extends SwingTool {
      */
     private static final long serialVersionUID = -1900606129100906010L;
 
-    private IKvStore kvStore;
+    //private IKvStore kvStore;
+    private CassandraConnection kvStore;
     
     private volatile boolean isKvInited = false;
     
@@ -90,22 +91,24 @@ public class CassandraTool extends SwingTool {
                     return;
                 }
                 pushRecentList(key);
-                Serializable ret = kvStore.get(key);
+                ResultSet ret = kvStore.executeSql(key);
                 if(null == ret) {
                     txtVal.setText("null");
                     return;
                 }
                 
+                String retStr = CassandraConnection.resultSetToString(ret);
+                SwingUtils.alert(key + "-->" + retStr);
                 if(StringUtils.isNotBlank(txtFile.getText())) {
                     String fileName = StringUtils.trim(txtFile.getText());
                     File file = new File(fileName);
-                    FileUtils.writeByteArrayToFile(file, ByteUtil.object2Bytes(ret));
+                    FileUtils.writeByteArrayToFile(file, retStr.getBytes());
                 }
                 
-                txtVal.setText(ret.toString());
+                txtVal.setText(retStr);
                 //msgLine.setText("lastModified on " + DateFormatUtils.format(ret.getLastModifiedTime(),"yyyy-MM-dd HH:mm:ss"));
             } catch (Exception e1) {                
-               SwingUtils.alert(e1.getMessage());
+               SwingUtils.alert("Execute SQL error: " + e1.getMessage());
             }
 
 
@@ -118,26 +121,10 @@ public class CassandraTool extends SwingTool {
                 initKvStore();
                 String key = StringUtils.trim(txtKey.getText());
                 if(StringUtils.isEmpty(key)) {
-                    SwingUtils.alert("please input a key");
+                    SwingUtils.alert("please input a key or cql");
                     return;
                 }
-                String fileName = StringUtils.trim(txtFile.getText());
-                if(StringUtils.isEmpty(fileName)) {
-                    SwingUtils.alert("Please input a binary file to set value");
-                    return;
-                }
-                    
-               File file = new File(fileName);
-               byte[] bytes = FileUtils.readFileToByteArray(file);
-               Serializable ret = ByteUtil.bytes2Object(bytes);
-               //if(ret instanceof ITimingValue) { 
-                   kvStore.set(key, ret); 
-              // } else {
-              //     SwingUtils.alert("it's not ITimingValue, save it as TimingValue");
-              //     TimingValue tv = new TimingValue();
-              //     tv.setValue(ret);
-              //     kvStore.set(key, tv);
-              // } 
+                kvStore.executeSql(key);
             } catch (Exception e1) {                
                SwingUtils.alert(e1.getMessage());
             }
@@ -146,7 +133,7 @@ public class CassandraTool extends SwingTool {
         }
     }
 
-    private class RemoveHandler implements ActionListener {
+/*    private class RemoveHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
                 initKvStore();
@@ -167,7 +154,7 @@ public class CassandraTool extends SwingTool {
 
  
         }
-    }
+    }*/
     
     private class ReconfigHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -287,14 +274,14 @@ public class CassandraTool extends SwingTool {
         JPanel mainPane = new JPanel();
         mainPane.setLayout(new BorderLayout());
         
-        String[] labels = {"Host: ", "Port: ", "Token: ", "Location: "};
+        String[] labels = {"Host: ", "Port: ", "Token: ", "KeySpace: "};
         JTextComponent[] fields = {txtHost, txtPort, txtToken , txtLocation};
         JPanel cfgPane = this.createForm(labels, fields);        
         JPanel recentPane = this.createRecentList();
         JSplitPane topLeftPane = SwingUtils.createVSplitPane(cfgPane, recentPane, 120);
         
-        JPanel keyPane = SwingUtils.createVTextComponentPane("Key: ", txtKey);
-        JPanel valPane = SwingUtils.createVTextComponentPane("Value: ", txtVal);
+        JPanel keyPane = SwingUtils.createVTextComponentPane("Key/CQL: ", txtKey);
+        JPanel valPane = SwingUtils.createVTextComponentPane("Value/Result: ", txtVal);
         JSplitPane kvPane = SwingUtils.createVSplitPane(keyPane, valPane, 120);
         JPanel filePane = SwingUtils.createVTextComponentPane("From/To File", txtFile);
         
@@ -315,13 +302,13 @@ public class CassandraTool extends SwingTool {
 
         this.btnGet.addActionListener(new GetHandler());
         this.btnSet.addActionListener(new SetHandler());
-        this.btnRemove.addActionListener(new RemoveHandler());
+        //this.btnRemove.addActionListener(new RemoveHandler());
         this.btnConfig.addActionListener(new ReconfigHandler());
         this.btnClear.addActionListener(ActionHandlerFactory.createClearHandler(txtVal));
         
         insertBtn2ToolbarAndMenu("Clear", btnClear);
         insertBtn2ToolbarAndMenu("Reconfig", btnConfig);
-        insertBtn2ToolbarAndMenu("Remove", btnRemove);
+        //insertBtn2ToolbarAndMenu("Remove", btnRemove);
         insertBtn2ToolbarAndMenu("Set", btnSet);
         JMenuItem getItem = insertBtn2ToolbarAndMenu("Get", btnGet);
         getItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0,
@@ -357,12 +344,14 @@ public class CassandraTool extends SwingTool {
         if(isKvInited) {
             return;
         }
-        String host = this.txtHost.getText();
+       /* String host = this.txtHost.getText();
         int port = NumberUtils.toInt(this.txtPort.getText());
         String token = this.txtToken.getText();
-        String location = this.txtLocation.getText();
+        String location = this.txtLocation.getText();*/
         //this.kvStore = new CassandraStore(host, port, location, token);
         //this.kvStore.init();
+        
+        this.kvStore.connect(this.txtHost.getText());
         isKvInited = true;
     }
     
@@ -378,10 +367,10 @@ public class CassandraTool extends SwingTool {
     
     public void init() {
         super.init();
-        String server = "10.224.55.35";
+        String server = "10.224.57.163";
         int port = 12620;
         String token = "KCojQCRIREZJa2RoQCQpJkAjXnczaWhm";
-        String location = "HF..TestGW";
+        String location = "TestKeySpace";
         this.txtHost.setText(server);
         this.txtPort.setText(""+port);
         this.txtToken.setText(token);
@@ -392,9 +381,9 @@ public class CassandraTool extends SwingTool {
     
     
     
-    public void setKvStore(IKvStore kvStore) {
+   /* public void setKvStore(IKvStore kvStore) {
         this.kvStore = kvStore;
-    }
+    }*/
 
     /**
      * @param args
