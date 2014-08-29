@@ -29,12 +29,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.JTextComponent;
 
-import org.apache.commons.io.FileUtils;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.datastax.driver.core.ResultSet;
-import com.github.walterfan.util.ByteUtil;
-import com.github.walterfan.util.IKvStore;
+
 import com.github.walterfan.util.cassandra.CassandraConnection;
 import com.github.walterfan.util.swing.ActionHandlerFactory;
 import com.github.walterfan.util.swing.BinaryFileLoadHandler;
@@ -84,13 +83,14 @@ public class CassandraTool extends SwingTool {
     private class GetHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                initKvStore();
-                String key = StringUtils.trim(txtKey.getText());
-                if(StringUtils.isEmpty(key)) {
+                //initKvStore();
+                String sql = StringUtils.trim(txtKey.getText());
+                if(StringUtils.isEmpty(sql)) {
                     SwingUtils.alert("please input a key");
                     return;
                 }
-                pushRecentList(key);
+                pushRecentList(sql);
+                /*
                 ResultSet ret = kvStore.executeSql(key);
                 if(null == ret) {
                     txtVal.setText("null");
@@ -103,10 +103,12 @@ public class CassandraTool extends SwingTool {
                     String fileName = StringUtils.trim(txtFile.getText());
                     File file = new File(fileName);
                     FileUtils.writeByteArrayToFile(file, retStr.getBytes());
-                }
-                
-                txtVal.setText(retStr);
-                //msgLine.setText("lastModified on " + DateFormatUtils.format(ret.getLastModifiedTime(),"yyyy-MM-dd HH:mm:ss"));
+                }*/
+                CassandraConnection conn = new CassandraConnection();
+                conn.connect(txtHost.getText());
+           	 	ResultSet rs = conn.executeSql(sql);                
+                txtVal.setText(CassandraConnection.resultSetToString(rs));
+                conn.close();
             } catch (Exception e1) {                
                SwingUtils.alert("Execute SQL error: " + e1.getMessage());
             }
@@ -191,13 +193,13 @@ public class CassandraTool extends SwingTool {
     
     JTextArea txtFile = new JTextArea(2,20);
     
-    private JButton btnGet = createOrangeButton("Get", "Get value by key", 24, 24);
+    private JButton btnGet = createOrangeButton("Execute", "Execute SQL", 24, 24);
     
-    private JButton btnSet = createOrangeButton("Set", "Set value by key", 24, 24);
+    //private JButton btnSet = createOrangeButton("Set", "Set value by key", 24, 24);
     
-    private JButton btnRemove = createOrangeButton("Remove", "Remove value by key", 24, 24);
+    //private JButton btnRemove = createOrangeButton("Remove", "Remove value by key", 24, 24);
     
-    private JButton btnConfig = createOrangeButton("Reset", "Change Config of KV", 24, 24);
+    //private JButton btnConfig = createOrangeButton("Reset", "Change Config of KV", 24, 24);
     
     private JButton btnClear = createOrangeButton("Clear", "Get value by key", 24, 24);
     
@@ -301,15 +303,15 @@ public class CassandraTool extends SwingTool {
         
 
         this.btnGet.addActionListener(new GetHandler());
-        this.btnSet.addActionListener(new SetHandler());
+        //this.btnSet.addActionListener(new SetHandler());
         //this.btnRemove.addActionListener(new RemoveHandler());
-        this.btnConfig.addActionListener(new ReconfigHandler());
+        //this.btnConfig.addActionListener(new ReconfigHandler());
         this.btnClear.addActionListener(ActionHandlerFactory.createClearHandler(txtVal));
         
         insertBtn2ToolbarAndMenu("Clear", btnClear);
-        insertBtn2ToolbarAndMenu("Reconfig", btnConfig);
+        //insertBtn2ToolbarAndMenu("Reconfig", btnConfig);
         //insertBtn2ToolbarAndMenu("Remove", btnRemove);
-        insertBtn2ToolbarAndMenu("Set", btnSet);
+        //insertBtn2ToolbarAndMenu("Set", btnSet);
         JMenuItem getItem = insertBtn2ToolbarAndMenu("Get", btnGet);
         getItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0,
                 false));

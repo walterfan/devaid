@@ -77,9 +77,9 @@ public class ToolKit extends JFrame implements ChangeListener {
         encodeTool.init();
         frameContainer.addFrame(encodeTool);
 
-        //CassandraTool kvTool = new CassandraTool("Cassandra Tool v1.0");
-        //kvTool.init();
-        //frameContainer.addFrame(kvTool);
+        CassandraTool kvTool = new CassandraTool("Cassandra Tool v1.0");
+        kvTool.init();
+        frameContainer.addFrame(kvTool);
         
         JmsTool jmsTool = new JmsTool("JMS Tool v1.0");
         jmsTool.init();
