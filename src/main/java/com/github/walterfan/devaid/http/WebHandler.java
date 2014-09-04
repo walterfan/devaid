@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid;
+package com.github.walterfan.devaid.http;
 
 import java.io.IOException;
 

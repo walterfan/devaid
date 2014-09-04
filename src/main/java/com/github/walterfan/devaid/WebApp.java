@@ -20,6 +20,9 @@ import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import com.github.walterfan.devaid.http.WebCmdHandler;
+import com.github.walterfan.devaid.http.WebHandler;
+
 public class WebApp extends HttpServlet {
 	/**
 	 * 
@@ -36,14 +39,7 @@ public class WebApp extends HttpServlet {
 	private Server _server;
 	private WebHandler webHandler;
 
-	public static void main(String[] args) throws Exception {
 
-		int nPort = args.length == 0 ? 1975 : Integer.parseInt(args[0]);
-		WebApp webApp = new WebApp();
-		webApp.start(nPort);
-	}
-
-	
 	
 	public WebHandler getWebHandler() {
 		return webHandler;
@@ -65,7 +61,7 @@ public class WebApp extends HttpServlet {
 		
 		handlers.addHandler(createDynmicWebApp(JSP_WIKI_DIR, JSP_WIKI_TMP));
 		handlers.addHandler(createStaticWebApp(HOME_FOLDER, HOME_PAGE));
-		handlers.addHandler(createServletApp("/cmd"));
+		handlers.addHandler(createServletApp("/api"));
 		handlers.addHandler(new DefaultHandler());
 		_server.setHandler(handlers);
 		_server.start();
@@ -84,7 +80,7 @@ public class WebApp extends HttpServlet {
 
 	}
 
-	public static Handler createServletApp(String path) throws Exception {
+	public Handler createServletApp(String path) throws Exception {
 
 		ServletHandler handler = new ServletHandler();
 		handler.addServletWithMapping(WebApp.class, path);
@@ -131,13 +127,22 @@ public class WebApp extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		logger.info("waltertestL " + webHandler);
 		if(null != webHandler) {
 			this.webHandler.handle(request, response);
 			return;
+		} else {
+			this.webHandler = new WebCmdHandler();
+			this.webHandler.handle(request, response);
+			return;
 		}
+		
+		/*
+		
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getWriter().println("<h1>Command Executor</h1>");
+		response.getWriter().println("<h1>Command Executor</h1>" + request.getServletPath());
+		*/
 	}
 	
 	public Handler createDynmicWebApp(String warPath, String tmpPath) throws Exception {
@@ -151,7 +156,7 @@ public class WebApp extends HttpServlet {
 		webapp.setDescriptor(location.toExternalForm() + "/WEB-INF/web.xml");
 		webapp.setServer(_server);
 		webapp.setParentLoaderPriority(true);
-		//webapp.setWar(location.toExternalForm());
+		//webapp.setWar(location.toExternalForm());;
 
 		// (Optional) Set the directory the war will extract to.
 		// If not set, java.io.tmpdir will be used, which can cause problems
@@ -162,5 +167,17 @@ public class WebApp extends HttpServlet {
 		
 	}
 	
+	public static void main(String[] args) throws Exception {
+
+		int nPort = args.length == 0 ? 1975 : Integer.parseInt(args[0]);
+		WebApp webApp = new WebApp();
+		WebHandler webHandler = new WebCmdHandler();
+		webApp.setWebHandler(webHandler);
+		
+		webApp.start(nPort);
+
+		
+		
+	}
 
 }
