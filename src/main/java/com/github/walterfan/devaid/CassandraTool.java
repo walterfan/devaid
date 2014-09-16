@@ -6,8 +6,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.Serializable;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +50,7 @@ public class CassandraTool extends SwingTool {
     private static final long serialVersionUID = -1900606129100906010L;
 
     //private IKvStore kvStore;
-    private CassandraConnection kvStore;
+    private CassandraConnection kvStore;       
     
     private volatile boolean isKvInited = false;
     
@@ -104,11 +103,13 @@ public class CassandraTool extends SwingTool {
                     File file = new File(fileName);
                     FileUtils.writeByteArrayToFile(file, retStr.getBytes());
                 }*/
-                CassandraConnection conn = new CassandraConnection();
-                conn.connect(txtHost.getText());
-           	 	ResultSet rs = conn.executeSql(sql);                
+                if(null == kvStore) {
+                	kvStore = new CassandraConnection();
+                }
+                kvStore.connect(txtHost.getText(), txtUsername.getText(), txtPassword.getText());
+           	 	ResultSet rs = kvStore.executeSql(sql);                
                 txtVal.setText(CassandraConnection.resultSetToString(rs));
-                conn.close();
+                kvStore.close();
             } catch (Exception e1) {                
                SwingUtils.alert("Execute SQL error: " + e1.getMessage());
             }
@@ -181,11 +182,11 @@ public class CassandraTool extends SwingTool {
     
     JTextField txtHost = new JTextField(20);
 
-    JTextField txtPort = new JTextField(20);
+    JTextField txtUsername = new JTextField(20);
     
-    JTextField txtToken = new JTextField(20);
+    JTextField txtPassword = new JTextField(20);
 
-    JTextField txtLocation = new JTextField(20);
+    JTextField txtSpace = new JTextField(20);
     
     JTextArea txtKey = new JTextArea(2,20);
     
@@ -276,8 +277,8 @@ public class CassandraTool extends SwingTool {
         JPanel mainPane = new JPanel();
         mainPane.setLayout(new BorderLayout());
         
-        String[] labels = {"Host: ", "Port: ", "Token: ", "KeySpace: "};
-        JTextComponent[] fields = {txtHost, txtPort, txtToken , txtLocation};
+        String[] labels = {"Host: ", "Username: ", "Password: ", "KeySpace: "};
+        JTextComponent[] fields = {txtHost, txtUsername, txtPassword , txtSpace};
         JPanel cfgPane = this.createForm(labels, fields);        
         JPanel recentPane = this.createRecentList();
         JSplitPane topLeftPane = SwingUtils.createVSplitPane(cfgPane, recentPane, 120);
@@ -353,7 +354,7 @@ public class CassandraTool extends SwingTool {
         //this.kvStore = new CassandraStore(host, port, location, token);
         //this.kvStore.init();
         
-        this.kvStore.connect(this.txtHost.getText());
+        this.kvStore.connect(this.txtHost.getText(), this.txtUsername.getText(), this.txtPassword.getText());
         isKvInited = true;
     }
     
@@ -374,9 +375,9 @@ public class CassandraTool extends SwingTool {
         String token = "KCojQCRIREZJa2RoQCQpJkAjXnczaWhm";
         String location = "TestKeySpace";
         this.txtHost.setText(server);
-        this.txtPort.setText(""+port);
-        this.txtToken.setText(token);
-        this.txtLocation.setText(location);
+        this.txtUsername.setText(""+port);
+        this.txtPassword.setText(token);
+        this.txtSpace.setText(location);
         
        
     }

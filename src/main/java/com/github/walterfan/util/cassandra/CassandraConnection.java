@@ -14,11 +14,15 @@ import com.datastax.driver.core.Session;
 public class CassandraConnection {
     private Cluster cluster;    
     private Session session;
-    
+    private boolean isConnected;
 
-    public void connect(String nodes) {
+    public void connect(String nodes, String username, String password) {
+    	if(isConnected) {
+    		return;
+    	}
     	cluster = Cluster.builder()
                 .addContactPoints(nodes.split(","))
+                .withCredentials(username, password)
                 .build();
         Metadata metadata = cluster.getMetadata();
         System.out.printf("Connected to cluster: %s\n", 
@@ -29,10 +33,12 @@ public class CassandraConnection {
         }
         
         session = cluster.connect();
+        this.isConnected = true;
      }
 
     public void close() {
         cluster.close();
+        this.isConnected = false;
     }
 
     
