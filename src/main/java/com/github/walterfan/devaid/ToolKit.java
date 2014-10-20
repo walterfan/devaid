@@ -91,4 +91,9 @@ public class ToolKit extends JFrame implements ChangeListener {
 		
         SwingUtils.run(frameContainer, 1000, 700);
     }
+    
+    public static void main( String[] args )
+    {
+       ToolKit.start(args);
+    }
 }

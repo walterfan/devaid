@@ -15,7 +15,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -29,7 +30,7 @@ public class WebApp extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Log.getLogger(WebApp.class);
-	private static final String JSP_WIKI_WAR = "/workspace/java/JSPWiki.war";
+	//private static final String JSP_WIKI_WAR = "/workspace/java/JSPWiki.war";
 	private static final String JSP_WIKI_DIR = "/workspace/exam/JSPWiki";
 	private static final String JSP_WIKI_PATH = "/wiki";
 	private static final String JSP_WIKI_TMP = "/workspace/tmp";
@@ -81,45 +82,18 @@ public class WebApp extends HttpServlet {
 	}
 
 	public Handler createServletApp(String path) throws Exception {
-
-		ServletHandler handler = new ServletHandler();
-		handler.addServletWithMapping(WebApp.class, path);
-
-		return handler;
+		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath(path);
+       
+      
+		//ServletHandler handler = new ServletHandler();
+		//handler.addServletWithMapping(WebApp.class, path);
+		context.addServlet(new ServletHolder(this), path+"/sip");
+		return context;
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-
-	@Override
-	protected void doPut(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-	
-	@Override
-	protected void doDelete(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-	
-	@Override
-	protected void doHead(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-	
-	@Override
-	protected void doTrace(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
-	
-	@Override
-	protected void doOptions(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
@@ -131,18 +105,12 @@ public class WebApp extends HttpServlet {
 		if(null != webHandler) {
 			this.webHandler.handle(request, response);
 			return;
-		} else {
-			this.webHandler = new WebCmdHandler();
-			this.webHandler.handle(request, response);
-			return;
-		}
-		
-		/*
-		
+		} 
+			
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getWriter().println("<h1>Command Executor</h1>" + request.getServletPath());
-		*/
+		response.getWriter().println("<h3>The handler have not be implemented</h3>" + request.getServletPath());
+		
 	}
 	
 	public Handler createDynmicWebApp(String warPath, String tmpPath) throws Exception {
