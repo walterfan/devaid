@@ -18,13 +18,13 @@
 </appender>
 
   <logger name="com.github.walterfan">
-    <level value="info"/> 
-  </logger>
-<!--
-  <logger name="java.sql">
     <level value="debug"/> 
   </logger>
--->
+
+  <logger name="javax.ws.rs">
+    <level value="debug"/> 
+  </logger>
+
   <root> 
     <priority value ="info" /> 
     <appender-ref ref="console" /> 

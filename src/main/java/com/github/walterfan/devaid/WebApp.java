@@ -16,10 +16,12 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
 import com.github.walterfan.devaid.http.WebCmdHandler;
 import com.github.walterfan.devaid.http.WebHandler;
@@ -85,10 +87,13 @@ public class WebApp extends HttpServlet {
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(path);
        
-      
-		//ServletHandler handler = new ServletHandler();
-		//handler.addServletWithMapping(WebApp.class, path);
-		context.addServlet(new ServletHolder(this), path+"/sip");
+        ServletHolder servHolder = new ServletHolder(new HttpServletDispatcher());
+        servHolder.setInitParameter("javax.ws.rs.Application", "com.github.walterfan.devaid.WebService");
+        context.addServlet(servHolder, "/api/*");
+        
+        //ServletHandler handler = new ServletHandler();
+		//handler.addServletWithMapping(WebApp.class, "/cmd");
+			
 		return context;
 	}
 

@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid;
+package com.github.walterfan.devaid.sip;
 
 import gov.nist.javax.sip.SipStackExt;
 import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;

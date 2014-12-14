@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid;
+package com.github.walterfan.devaid.sip;
 
 //refer to http://www.oracle.com/technetwork/java/introduction-jain-sip-090386.html
 import java.net.InetAddress;
@@ -39,6 +39,8 @@ import javax.sip.header.ViaHeader;
 import javax.sip.message.MessageFactory;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
+
+import com.github.walterfan.devaid.MessageProcessor;
 
 public class SipLayer implements SipListener {
 

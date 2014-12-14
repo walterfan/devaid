@@ -107,7 +107,8 @@ public class CassandraTool extends SwingTool {
                 	kvStore = new CassandraConnection();
                 }
                 kvStore.connect(txtHost.getText(), txtUsername.getText(), txtPassword.getText());
-           	 	ResultSet rs = kvStore.executeSql(sql);                
+           	 	ResultSet rs = kvStore.executeSql(sql);   
+           	 	//logger.info(rs.getExecutionInfo().);
                 txtVal.setText(CassandraConnection.resultSetToString(rs));
                 kvStore.close();
             } catch (Exception e1) {                
