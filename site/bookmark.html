@@ -1,0 +1,207 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Development Manual</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="js/underscore.js"></script>
+<script type="text/javascript" src="js/backbone.js"></script>
+
+<link href="css/layout2.css" media="all" rel="stylesheet" />
+<link href="css/slide.css" media="all" rel="stylesheet" />
+<link href="css/font.css" media="all" rel="stylesheet" />
+<link href="css/devaid.css" media="all" rel="stylesheet" />
+
+<script type="text/javascript" src="js/link.js"></script>
+<script type="text/javascript">
+
+$(function(){
+    $('#LinkDiv').hide();
+    $('#addBtn').click(function (){
+        console.log("show LinkDiv");
+        //$('#linksDiv').hide();
+        $('#LinkDiv').show();
+    });
+
+    
+    $('.glyphicon-edit').click(function (){
+        console.log("show LinkDiv");
+        $('#LinkDiv').show();
+    });
+    
+    $('.glyphicon-remove').click(function (){
+            var answer = confirm('Are you sure you want to delete this?');
+            if (answer)
+            {
+              console.log('yes');
+            }
+            else
+            {
+              console.log('cancel');
+            }
+        });
+});
+
+</script>
+
+
+</head>
+
+<body>
+<div id="container">
+<div id="top">
+<h1>Development Aid Tools v1.0</h1>
+<div id="header">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li id="current"><a href="bookmark.html">Bookmark</a></li>
+    <li><a href="manual.html">Manual</a></li>
+    <li><a href="snippetss.html">Snippet</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+  </ul>
+</div>
+<div style="clear:both"></div>
+</div>
+
+<div id="leftnav">
+
+
+</div>
+	
+	
+<div id="content">
+<div class = "item" id="linksDiv">
+
+<h2>Bookmark</h2>
+<table class="contentTab table-striped table-bordered table-hover table-condensed" id="linkTab">
+  <thead><tr>
+    <th width="5%" style="text-align: left">#</th>
+    <th width="20%">Title</th>
+    <th width="35%">URL</th>
+    <th width="12%">Category</th>
+    <th width="18%">Tags</th>
+    <th width="10%">Action</th>
+  </tr></thead>
+    <tbody>
+    <tr>
+    <td>1</td>
+    <td><a href="">RFC tool</a></td>
+    <td>
+   
+    </td>
+    <td>
+    
+    </td>
+    <td>
+    
+    </td>
+    <td><span class="glyphicon glyphicon-edit"> <span class="glyphicon glyphicon-remove"></span></td>
+  </tr>
+ 
+ 
+  
+  </tbody>
+ <tfoot><tr>
+    <td colspan="6">
+    <table width="100%" class="pageTab" cellpadding="0" cellspacing="0">
+    <tr><td align="left">
+                    <ul class="pagination">
+                        <li class="disabled"><span>Prev</span></li>
+                        <li class="active"><a href="#"><span>1</span></a></li>
+                        <li ><a href="#"><span>2</span></a></li>
+                        <li ><a href="#"><span>3</span></a></li>
+                        <li ><a href="#"><span>4</span></a></li>
+                        <li ><a href="#"><span>5</span></a></li>
+                        <li ><a href="#"><span>6</span></a></li>
+                        <li ><a href="#"><span>7</span></a></li>
+                        <li ><a href="#"><span>8</span></a></li>
+                        <li ><a href="#"><span>9</span></a></li>
+                        <li ><a href="#"><span>Next</span></a></li>
+                    </ul>
+    </td>
+    <td  align="right">
+    <input type="button" value="Add" id="addBtn" class="fullBtn">
+    <input type="button" value="Import" onclick="" class="fullBtn">
+    <input type="button" value="Export" onclick="" class="fullBtn">
+    </td></tr></table>
+    </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+<div class = "item" id="LinkDiv">
+<h2>Link</h2>
+<form method="post" action="">
+<table class="contentTab table-striped table-bordered table-hover table-condensed">
+<thead><tr>
+    <th colspan="2" style="text-align:center">Link</th>
+  </tr></thead>
+<tbody>
+<TR>
+    <TD width="30%" align="right">Title: </TD>
+    <TD nowrap><INPUT NAME="title" id="title" size="40" TYPE="text" value="Ford">
+    &nbsp;<span>*</span>
+    </TD>
+</TR>
+<TR>
+    <TD align="right">URL: </TD>
+    <TD nowrap>
+    <INPUT NAME="url" id="url" size="40" TYPE="text" value="">
+    &nbsp;<span >*</span>
+ 
+    </td>
+</TR>
+<TR>
+    <TD align="right">Category: </TD>
+    <TD><INPUT NAME="catetory" id="catetory" TYPE="text" size="40" value="">
+    &nbsp;<span>*</span>
+    
+    </TD>
+</TR>
+<TR>
+    <TD align="right">Tags: </TD>
+    <TD><INPUT NAME="tag" id="tag" TYPE="text" size="40" value="">
+
+    
+    </TD>
+</TR>
+</tbody>
+  <tfoot><tr>
+    <td colspan="5">
+    <input type="button" value="Save" id="btnSubmit" class="fullBtn">
+    </td>
+    </tr>
+    </tfoot>
+</TABLE>
+
+</form>
+</div>
+
+<script type="text/template" id="linktpl">
+	<tr>
+	      <td><%=id%></td>
+	      <td><a href="<%=url%>"><%=title%></a></td>
+	      <td>
+			  <%=url%>
+	      </td>
+	      <td>
+    		  <%=category%>
+	      </td>
+	      <td>
+    		  <%=tag%>
+	      </td>
+	      <td><span class="glyphicon glyphicon-edit"> <span class="glyphicon glyphicon-remove"></span></td	
+	</tr>
+</script>
+
+</div><!-- content div end -->
+<div id="footer">
+<h2>Copyright &copy; 2009-2010 <a
+    href="mailto:walter.fan@gmail.com"> <em>Walter Fan</em></a> all rights
+reserved.</h2>
+</div>
+</div>
+</body>
+</html>

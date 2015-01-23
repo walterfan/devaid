@@ -1,9 +1,17 @@
 Developer Aid Toolkit 1.0
 -----------------------------
+
+## Swing based tool
 * Http Tool
 * SQL Tool
 * Encode conversion Tool
 * Regular Expression Tool
+
+## Web based tool
+* bookmark
+* manual
+* snippet
+
 
 
 # Some useful scripts
@@ -21,6 +29,8 @@ Developer Aid Toolkit 1.0
 * 2) java -jar ./target/devaid-1.0-jar-with-dependencies.jar
 
 
+# License
+---------------------------------------
     Copyright 2013 Walter Fan
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,5 +46,5 @@ Developer Aid Toolkit 1.0
     limitations under the License.
 
 
-  Thanks for using it
-  Walter Fan
+Thanks for using it
+Walter Fan
