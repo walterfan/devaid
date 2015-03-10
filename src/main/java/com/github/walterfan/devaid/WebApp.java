@@ -4,12 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.ProtectionDomain;
+import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
@@ -20,6 +27,7 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
+import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
@@ -59,13 +67,28 @@ public class WebApp extends HttpServlet {
 	public void start(int nPort) throws Exception {
 		_server = new Server(nPort);
 		
+		LoginService loginService = new HashLoginService("MyRealm",
+                "src/main/resources/realm.properties");
+        _server.addBean(loginService);
+		
 		HandlerList handlers = new HandlerList();
 
+		Handler handler1 = createDynmicWebApp(JSP_WIKI_DIR, JSP_WIKI_TMP);
+		Handler handler2 = createStaticWebApp(HOME_FOLDER, HOME_PAGE);
+		Handler handler3 = createServletApp("/");
+		Handler handler4 = new DefaultHandler();
 		
-		handlers.addHandler(createDynmicWebApp(JSP_WIKI_DIR, JSP_WIKI_TMP));
-		handlers.addHandler(createStaticWebApp(HOME_FOLDER, HOME_PAGE));
-		handlers.addHandler(createServletApp("/api"));
-		handlers.addHandler(new DefaultHandler());
+		SecurityHandler sh1 = createSecurityHandler(loginService);
+		sh1.setHandler(handler1);
+		
+		SecurityHandler sh2 = createSecurityHandler(loginService);
+		sh2.setHandler(handler2);
+		
+		handlers.addHandler(sh1);
+		handlers.addHandler(sh2);
+		handlers.addHandler(handler3);
+		handlers.addHandler(handler4);
+		
 		_server.setHandler(handlers);
 		_server.start();
 		_server.join();
@@ -138,6 +161,38 @@ public class WebApp extends HttpServlet {
 		webapp.setTempDirectory(new File(tmpPath));
 		return webapp;
 		
+	}
+	
+	
+	public SecurityHandler createSecurityHandler(LoginService loginService) {
+		
+		
+        ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+
+
+        // This constraint requires authentication and in addition that an
+        // authenticated user be a member of a given set of roles for
+        // authorization purposes.
+        Constraint constraint = new Constraint();
+        constraint.setName("auth");
+        constraint.setAuthenticate(true);
+        constraint.setRoles(new String[] { "user", "admin" });
+
+        // Binds a url pattern with the previously created constraint. The roles
+        // for this constraing mapping are mined from the Constraint itself
+        // although methods exist to declare and bind roles separately as well.
+        ConstraintMapping mapping = new ConstraintMapping();
+        mapping.setPathSpec("/*");
+        mapping.setConstraint(constraint);
+
+        security.setConstraintMappings(Collections.singletonList(mapping));
+        security.setAuthenticator(new BasicAuthenticator());
+        security.setLoginService(loginService);
+
+        // chain the hello handler into the security handler
+        //security.setHandler(handler);
+
+        return security;
 	}
 	
 	public static void main(String[] args) throws Exception {

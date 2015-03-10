@@ -16,9 +16,9 @@ public class WebTool {
 		  Server server = new Server(9091);
 		  ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		  context.setContextPath("/");
-		  ServletHolder h = new ServletHolder(new HttpServletDispatcher());
-		  h.setInitParameter("javax.ws.rs.Application", "com.github.walterfan.devaid.WebService");
-		  context.addServlet(h, "/*");
+		  ServletHolder apiHolder = new ServletHolder(new HttpServletDispatcher());
+		  apiHolder.setInitParameter("javax.ws.rs.Application", "com.github.walterfan.devaid.WebService");
+		  context.addServlet(apiHolder, "/api/*");
 		  server.setHandler(context);
 		  try {
 		   server.start();
