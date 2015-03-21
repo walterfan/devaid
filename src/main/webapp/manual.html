@@ -1,0 +1,164 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+<link rel=stylesheet href="<{$basepath}>/style/styles.css" type="text/css">
+<script language=javascript src="<{$basepath}>/script/functions.js"></script>
+<script language="javascript" src='<{$basepath}>/script/scroll.js'></script>
+<style type="text/css">
+.taskcontent {
+left:0;
+margin:0;
+padding-left:0;
+}
+.taskcontent li{
+list-style-position:inside;
+border-bottom: 1px dashed #336699;
+font-size:14px;
+line-height:32px;
+padding-top:0px;
+padding-left:2px;
+text-align:left
+}
+.taskcontent span{
+text-shadow: 0px 0px 20px yellow, 0px 0px 10px orange, red 5px -5px;
+font-weight: bold;
+padding-left: 20px;
+padding-top:0px;
+padding-bottom:0px;
+font-size:13px;
+}
+</style>
+
+</head>
+
+<body>
+<center>
+<TABLE width="80%" cellspacing=1 cellpadding=2 style="border:2px groove #99CCFF;color:#330066;font-size:14px" >
+<tr>
+<TD style="text-align:center; font-size: 3em; font-weigth: bold;border:1px groove blue">
+Developer Aider v1.0
+</td></tr>
+ <form name="main" action="<{php}>echo $PHP_SELF;<{/php}>" method="POST">
+<tr><TD  colspan=2 align="left" >
+<table width=100%>
+<tr><td  align="left" valign="top" width="20%">
+<ul>
+<li>Http Tool</li>
+<li>SQL Tool</li>
+<li>Regex Tool</li>
+<li>Encode Tool</li>
+<li>Timezone Tool</li>
+</ul>
+  </td>
+<td  align="left" valign="top" width="40%" style="border-left:1px dashed #6699FF;">
+<TABLE cellspacing="0" cellpadding="0" border="0">
+<TR>
+<TD align="center" width="100%">
+<table cellpadding="2" cellspacing="0" >
+<tr><td style="line-height: 24px; font-size: 14px">
+<div>
+<IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc6120" target="_blank">RFC 6120</a>, <a href="http://tools.ietf.org/html/rfc6121" target="_blank">RFC 6121</a> -- XMPP 
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://xmpp.org/extensions/xep-0045.html" target="_blank">XEP-0045</a>: MUC, 
+<a href="http://xmpp.org/extensions/xep-0166.html" target="_blank">XEP-0166</a>: Jingle
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://xmpp.org/extensions/xep-0124.html" target="_blank">xep-0124</a>: BOSH, 
+<a href="http://xmpp.org/extensions/xep-0206.html" target="_blank">xep-0206</a>: XMPP Over BOSH
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3261" target="_blank">RFC 3261</a> -- SIP ,
+<a href="http://tools.ietf.org/html/rfc4566" target="_blank">RFC 4566</a> -- SDP
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3550" target="_blank">RFC 3550</a> -- RTP,
+<a href="http://tools.ietf.org/html/rfc3551" target="_blank">RFC 3551</a> -- RTP Profile, 
+<a href="http://tools.ietf.org/html/rfc3711" target="_blank">RFC 3711</a> -- SRTP
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc2833" target="_blank">RFC 2833</a> -- RTP Payload for DTMF/Tones /Signals
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3725" target="_blank">RFC 3725</a> -- Best Current Practices for 3pcc
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3262" target="_blank">RFC 3262</a>: RPACK, 
+<a href="http://tools.ietf.org/html/rfc2326" target="_blank">RFC 2326</a>: RTSP
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3264" target="_blank">RFC 3264</a>   An Offer/Answer Model with SDP
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3265" target="_blank">RFC 3265</a> -- SIP-Specific Event Notification
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc2976" target="_blank">RFC 2976</a> -- The SIP INFO Method
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3311" target="_blank">RFC 3311</a> -- UPDATE Method
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3515" target="_blank">RFC 3515</a> -- The SIP Refer Method
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc4028" target="_blank">RFC 4028</a> -- Session Timers in SIP
+
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc4317" target="_blank">RFC 4317</a> -- SDP Offer/Answer Examples
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc4117" target="_blank">RFC 4117</a> -- Transcoding Services Invocation using 3PCC
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc4353" target="_blank">RFC 4353</a> -- A Framework for Conf with SIP
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc3665" target="_blank">RFC 3665</a> -- SIP Basic Call Flow Examples
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc5117" target="_blank">RFC 5117</a> -- RTP Topologies
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc6190" target="_blank">RFC 6190</a> -- RTP Payload Format for SVC
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc5245" target="_blank">RFC 5245</a> -- ICE,
+<a href="http://tools.ietf.org/html/rfc5389" target="_blank">5389</a>-STUN,
+<a href="http://tools.ietf.org/html/rfc5766" target="_blank">5766</a>-TURN
+
+
+<br><IMG SRC="<{$basepath}>/images/b1.gif" WIDTH="15" HEIGHT="13" BORDER="0" ALT="">
+<a href="http://tools.ietf.org/html/rfc6455" target="_blank">RFC 6455</a> -- WebSocket
+
+</div>
+</td></tr>
+ </table>
+</td></tr>
+</TABLE>
+</td>
+
+<td align="left" valign="top" style="border:1px solid #336699;width:240px; height:500px;">
+<table cellpadding="2" cellspacing="2">
+<tr align="center"><td><b>Manual</b></td></tr>
+<tr><td><li> <a href="http://docs.jquery.com/"  target="_blank"> jQuery</a></td></tr>
+<tr><td><li> <a href="http://linux.die.net/" target="_blank">Linux C API</a></td></tr>
+<tr><td><li> <a href="http://www.sgi.com/tech/stl/" title="STL" target="_blank">STL</a></td></tr>
+<tr><td><li> <a href="http://docs.oracle.com/javase/7/docs/api/" target="_blank">JDK</a></td></tr>
+<tr><td><li> <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference"  target="_blank">JavaScript</a></td></tr>
+<tr><td><li> <a href="http://www.yolinux.com/TUTORIALS/GDB-Commands.html" title="GDB" target="_blank">GDB</a></td></tr>
+</table>
+</td>
+
+<td align="left" valign="top" style="border:1px solid #336699">
+<iframe id="sina_widget_1059139255" style="width:280px; height:500px;" frameborder="0" scrolling="no" src="http://v.t.sina.com.cn/widget/widget_blog.php?uid=1059139255&height=500&skin=wd_01&showpic=1"></iframe>
+</td>
+</tr>
+</table>
+	</td>
+</tr>
+
+  </form>
+</table>
+</center>
+</body>
+</html>

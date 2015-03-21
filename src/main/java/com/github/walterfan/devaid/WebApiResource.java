@@ -23,21 +23,21 @@ import com.github.walterfan.util.FileUtil;
 public class WebApiResource {
 	private static final Logger logger = Log.getLogger(WebApiResource.class);
 	
-	private String staticPath;
+	private final String staticPath;
 	
 	public WebApiResource() {
-		staticPath = "./site/static";
+		staticPath = "src/main/webapp/static";
 	}
 	
 	@GET
 	@Produces("text/html")
 	public Response index() throws URISyntaxException {
 		
-		//System.setProperty("user.dir", "./site");
+		//System.setProperty("user.dir", "./site");                
 		File f = new File(staticPath + "/index.html");
 		String mt = new MimetypesFileTypeMap().getContentType(f);
 		return Response.ok(f, mt).build();
-		//return Response.status(200).entity("task api").build();
+		//return Response.status(200).entity("message api").build();
 	}
 
 	
@@ -57,28 +57,28 @@ public class WebApiResource {
 	}
 	//read
 	@GET
-	@Path("task")
+	@Path("message")
 	@Produces("text/plain")
 	public Response helloGet() {
 		return Response.status(200).entity("HTTP GET method called").build();
 	}
 	//put
 	@POST
-	@Path("task")
+	@Path("message")
 	@Produces("text/plain")
 	public Response helloPost() {
 		return Response.status(200).entity("HTTP POST method called").build();
 	}
 	
 	@PUT
-	@Path("task")
+	@Path("message")
 	@Produces("text/plain")
 	public Response helloPut() {
 		return Response.status(200).entity("HTTP PUT method called").build();
 	}
 	
 	@DELETE
-	@Path("task")
+	@Path("message")
 	@Produces("text/plain")
 	public Response helloDelete() {
 		return Response.status(200).entity("HTTP DELETE method called").build();

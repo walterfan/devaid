@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Development Manual</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript" src="../js/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="../js/underscore.js"></script>
+<script type="text/javascript" src="../js/backbone.js"></script>
+
+<link href="../css/layout2.css" media="all" rel="stylesheet" />
+<link href="../css/slide.css" media="all" rel="stylesheet" />
+<link href="../css/font.css" media="all" rel="stylesheet" />
+<link href="../css/devaid.css" media="all" rel="stylesheet" />
+
+
+
+<script type="text/javascript">
+
+$(function(){
+
+	test1();
+  
+});
+
+function test1() {
+	
+	var aLinkList = [
+		{
+			id: 1,
+			title: "sina",
+			url: "http://www.sina.com.cn",
+			tags: "portal,news",
+			category: "site"
+		},
+		{
+			id: 2,
+			title: "ifeng",
+			url: "http://www.ifeng.com",
+			tags: "news",
+			category: "site"
+		},
+		{
+			id: 3,
+			title: "infoq",
+			url: "http://www.infoq.com/cn",
+			tags: "technique",
+			category: "site"
+		}
+	];
+	
+	var ClsLink = Backbone.Model.extend({
+		defaults: {
+			id: 0,
+			title: "",
+			url: "",
+			tags: "",
+			category: "site"
+		} 
+	});
+	
+	var ClsLinks = Backbone.Collection.extend({
+		model: ClsLink
+	});
+	
+	var ClsView = Backbone.View.extend({
+		el: "#examTbl>tbody",
+		
+		initialize: function() {
+			this.template = _.template($('#link-tpl').html());
+		},
+		
+		render: function() {
+			var curList = this.collection.models;
+			/*
+			this.el.innerHTML = "<ul>";
+			console.log(this.el.innerHTML);
+			for(var i=0; i<curList.length; i++) {
+				console.log(curList[i].get("title"));
+				this.el.innerHTML += "<li>" + curList[i].get("title") + "</li><br>";
+			}
+			this.el.innerHTML += "</ul>";	
+			console.log("see: "+ this.el.innerHTML);
+			*/
+		
+			for(var i=0; i<curList.length; i++) {
+				console.log(curList[i].get("title"));
+				this.el.innerHTML += this.template(curList[i].toJSON());
+			}
+			
+			
+		}
+		
+	});
+	
+	var aLinks = new ClsLinks(aLinkList);
+	var aView = new ClsView({collection: aLinks});
+	aView.render();
+}
+
+</script>
+</head>
+<body>
+	<script type="text/template" id="link-tpl">
+		<tr>
+		    <td><%= id %></td>
+		    <td><a href="<%= url %>"><%= title %></a></td>
+		    <td><%= url %></td>
+		    <td><%= category %></td>
+			<td><%= tags %></td>
+		    <td>
+			  <a href="/editlink.do?id=<%=id%>"><span class="glyphicon glyphicon-edit"></span></a>
+			  <a href="/dellink.do?id=<%=id%>"><span class="glyphicon glyphicon-remove"></span></a>
+			</td>
+		  </tr>
+	</script>
+	<div id="examDiv">
+	<table width="90%" border="1" cellspacing="8" id="examTbl"> 
+            <thead>
+            <th>#</th>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Category</th>
+            <th>Tags</th>
+            <th>Action</th>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
+	</div>
+</body>
+</html>
