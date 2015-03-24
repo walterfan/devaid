@@ -285,6 +285,19 @@
 -->
 
                 <dependency>
+                  <groupId>org.mybatis</groupId>
+                  <artifactId>mybatis</artifactId>
+                  <version>3.2.8</version>
+                </dependency>
+                
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                    <version>4.3.8.Final</version>
+                 </dependency>
+
+
+                <dependency>
                   <groupId>org.hibernate</groupId>
                   <artifactId>com.springsource.org.hibernate</artifactId>
                   <version>4.1.0.Final</version>
