@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Task">
+<typeAlias alias="task" type="cn.fanyamin.domain.Task"/>
+<typeAlias alias="remindTask" type="cn.fanyamin.domain.RemindTask"/>
+<typeAlias alias="remind" type="cn.fanyamin.domain.Remind"/>
+<typeAlias alias="context" type="cn.fanyamin.domain.Context"/>
+<typeAlias alias="goal" type="cn.fanyamin.domain.Goal"/>
+<typeAlias alias="map" type="java.util.Map"/>
+
+<resultMap id="getRemindTask" class="cn.fanyamin.domain.RemindTask">
+    <result property="remind" column="remindID" select="retrieveRemind" />
+    <result property="task" column="taskID" select="retrieveTask" />
+</resultMap>
+
+<insert id="createTask" parameterClass="task">
+	insert into wftask(taskName,taskType, categoryID, contextID, energy, 
+	description,priority,deadline,duration,beginTime, endTime, repeatID,
+    remindID, createTime, updateTime,userID)
+	values(#taskName#,#taskType#, #categoryID#, #contextID#, #energy#,
+    #description#,#priority#,
+    datetime(#deadline#/1000, 'unixepoch'),#duration#,
+    datetime(#beginTime#/1000, 'unixepoch'),
+    datetime(#endTime#/1000, 'unixepoch'),
+    #repeatID#,#remindID#,current_timestamp,current_timestamp , #userID#)
+  <selectKey resultClass="int" keyProperty="taskID">  
+        <!-- SELECT LAST_INSERT_ID() AS taskID  --> 
+		SELECT seq as taskID from sqlite_sequence where name='wftask'
+  </selectKey> 
+</insert>
+
+<sql id="task_fragment">
+<![CDATA[
+select taskID,taskName,taskType, categoryID, contextID, energy, userID, 
+    description,priority,duration,repeatID,remindID,
+    strftime('%s', deadline)*1000 as deadline, 
+    strftime('%s', beginTime)*1000 as beginTime, 
+    strftime('%s', endTime)*1000 as endTime,
+    strftime('%s', createTime)*1000 as createTime
+    from wftask
+]]>
+</sql>
+<select id="retrieveTask" parameterClass="int" resultClass="task">
+<include refid="task_fragment"/> where taskID=#taskID# 
+</select>
+
+<update id="updateTask" parameterClass="task">
+	update wftask set taskName=#taskName#,priority=#priority#,description=#description#,
+    taskType=#taskType#, categoryID=#categoryID#, contextID=#contextID#, 
+    energy=#energy#, repeatID = #repeatID#,remindID = #remindID#,
+    beginTime=datetime(#beginTime#/1000, 'unixepoch'), 
+    endtime=datetime(#endTime#/1000, 'unixepoch'),
+    deadline=datetime(#deadline#/1000, 'unixepoch'), 
+    duration = #duration#, 
+    updateTime=current_timestamp where taskid=#taskID#
+</update>
+
+<update id="finishTask" parameterClass="task">
+    update wftask set endtime=#endTime# 
+    where taskid=#taskID#
+</update>
+
+<delete id="deleteTask" parameterClass="Integer">
+	delete from wftask where taskid=#taskID#
+</delete>
+
+<select id="findTask" parameterClass="map" resultClass="task">
+    <include refid="task_fragment"/> where userID = #userID# and endTime is null 
+    <dynamic>
+          <isPropertyAvailable property="contextID">
+            <isGreaterThan prepend="and" property="contextID" compareValue="0">
+                 contextID = #contextID#
+            </isGreaterThan>
+          </isPropertyAvailable>
+          
+          <isPropertyAvailable property="categoryID">
+             <isGreaterThan prepend="and" property="categoryID" compareValue="0">
+                categoryID = #categoryID#
+            </isGreaterThan>
+          </isPropertyAvailable>
+          
+          <isPropertyAvailable property="energy">
+            <isGreaterThan prepend="and" property="energy" compareValue="0">
+                energy = #energy#
+            </isGreaterThan>
+          </isPropertyAvailable>
+  
+          <isPropertyAvailable property="taskName">
+            <isNotNull property="taskName">
+                and taskName like '%$taskName$%'
+            </isNotNull>
+          </isPropertyAvailable>
+    
+        <isPropertyAvailable property="taskType">
+            <isNotNull property="taskType">
+                and taskType = #taskType#
+            </isNotNull>
+          </isPropertyAvailable>
+          
+          <isPropertyAvailable property="priority">
+            <isNotNull property="priority">
+                and priority = #priority#
+            </isNotNull>
+          </isPropertyAvailable>          
+    </dynamic>  
+</select>
+
+<select id="listTask" resultClass="task">
+    <include refid="task_fragment"/>
+</select>
+
+<select id="getSubTaskList" parameterClass="int"  resultClass="task">
+<include refid="task_fragment"/> 
+where taskID in (select subTaskID from wfproject where taskID=#taskID#)    
+</select>
+
+<select id="getSubTaskCount" parameterClass="int"  resultClass="int">
+select count(*) from wfproject where taskID = #taskID#
+</select>
+
+<select id="getTaskListAsDate" parameterClass="map" resultClass="task">
+<include refid="task_fragment"/> 
+where userID=#userID# and strftime('%s',beginTime)*1000 between #fromDate# and #toDate# 
+</select>
+
+<select id="getTaskListByDeadline" parameterClass="map" resultClass="task">
+<include refid="task_fragment"/> 
+where userID=#userID# and (strftime('%s',deadline)*1000 
+between #fromDate# and #toDate# or 
+strftime('%s',endtime)*1000 
+between #fromDate# and #toDate#) 
+</select>
+
+<select id="getListOfTask" parameterClass="int" resultClass="task">
+<include refid="task_fragment"/>  
+where userID=#userID# and endTime is null order by priority
+</select>
+
+<select id="getTaskList" parameterClass="map" resultClass="task">
+<include refid="task_fragment"/>  
+where taskType=#taskType# and userID=#userID# and endTime is null order by priority
+</select>
+
+<select id="getFinishedTasks" parameterClass="int" resultClass="task">
+<include refid="task_fragment"/> where userID=#userID# and endTime is not null order by priority
+</select>
+
+<select id="getRepeatTasks" resultClass="task">
+<include refid="task_fragment"/> 
+<![CDATA[
+where taskid in (select max(taskID)
+from wftask where repeatID in (select repeatid from wfrepeat 
+where strftime('%s',expireTime) > strftime('%s',current_timestamp) or alwaysrepeat=1)
+ group by repeatID order by begintime desc) 
+ and strftime('%s',beginTime) < strftime('%s',current_timestamp)
+]]></select>
+
+<select id="listRepeatTask" parameterClass="map" resultClass="task">
+<include refid="task_fragment"/> 
+<![CDATA[ from wftask where userID=#userID# and beginTime > #beginTime# and repeatID in (select repeatid from wfrepeat 
+where strftime('%s',expireTime)*1000 < #endTime# or alwaysrepeat=1)
+]]></select>
+
+<select id="getContexts" resultClass="context">
+    select contextID, contextName, description from wfcontext
+</select>
+
+<select id="retrieveRemind" resultClass="remind">
+    select remindID, remindMethod,strftime('%s',remindTime)*1000 as remindTime, status from wfremind where remindID=#remindID#
+</select>
+
+<delete id="deleteRemind" parameterClass="int">
+    delete from wfremind where remindID=#remindID#
+</delete>
+
+<select id="listRemindTask" resultClass="remindTask">
+<![CDATA[
+    select a.taskID, a.remindID  
+    from wftask a, wfremind b 
+    where a.remindID > 0 and a.remindID=b.remindID and 
+    strftime('%s',b.remindTime) < strftime('%s',CURRENT_TIMESTAMP) 
+    and b.status=0 limit 100
+]]></select>
+
+<update id="updateRemind" parameterClass="map">
+update wfremind set status=#status# , remindTime = datetime(#remindTime#/1000, 'unixepoch') 
+where remindID=#remindID# and status=#oldStatus#
+</update>
+
+<insert id="createRemind" parameterClass="remind">
+insert into wfremind(remindTime,remindMethod,status) 
+values (datetime(#remindTime#/1000, 'unixepoch'),#remindMethod#, #status#)
+<selectKey resultClass="int" keyProperty="remindID">  
+         <!-- SELECT LAST_INSERT_ID() AS goalID  --> 
+         SELECT seq as remindID from sqlite_sequence where name='wfremind'
+</selectKey>
+</insert>
+
+<!-- goal -->
+<sql id="goal_fragment">
+<![CDATA[
+select goalID,goalName,goalType,description,categoryID, userID, 
+strftime('%s', deadline)*1000 as deadline,
+strftime('%s', createTime)*1000 as createTime from wfgoal
+]]>
+</sql>
+<insert id="createGoal" parameterClass="goal">
+    insert into wfgoal(goalName,description, categoryID,goalType,deadline, userID)
+    values(#goalName#,#description#,#categoryID#,#goalType#,datetime(#deadline#/1000, 'unixepoch'), #userID#)
+  <selectKey resultClass="int" keyProperty="goalID">  
+         <!-- SELECT LAST_INSERT_ID() AS goalID  --> 
+		 SELECT seq as goalID from sqlite_sequence where name='wfgoal'
+  </selectKey> 
+</insert>
+
+<select id="retrieveGoal" parameterClass="int" resultClass="goal">
+<include refid="goal_fragment"/> where goalID=#goalID#
+</select>
+
+<update id="updateGoal" parameterClass="goal">
+    update wfgoal set goalName=#goalName#,description=#description#,
+    goalType=#goalType#,categoryID=#categoryID#,
+    deadline=datetime(#deadline#/1000, 'unixepoch'),
+    endTime=datetime(#endTime#/1000, 'unixepoch')
+    where goalid=#goalID#
+</update>
+
+<delete id="deleteGoal" parameterClass="Integer">
+    delete from wfgoal where goalid=#goalID#
+</delete>
+
+<select id="getGoalList" parameterClass="map" resultClass="goal">
+<include refid="goal_fragment"/> where goalType=#goalType# 
+    and userID = #userID# 
+</select>
+
+<select id="getAllGoalList" parameterClass="int" resultClass="goal">
+<include refid="goal_fragment"/> where userID = #userID# and endTime is null
+</select>
+
+<select id="findGoal" parameterClass="map" resultClass="goal">
+<include refid="goal_fragment"/> where userID = #userID# 
+    and categoryID=#categoryID#
+    <dynamic prepend="AND">
+        <isPropertyAvailable property="goalType">
+            <isNotNull property="goalType">
+                goalType = #goalType#
+            </isNotNull>
+          </isPropertyAvailable>
+          <isPropertyAvailable property="categoryID">
+            <isNotNull property="categoryID">
+                categoryID = #categoryID#
+            </isNotNull>
+          </isPropertyAvailable>
+    </dynamic>
+</select>
+
+<insert id="createRepeatInfo" parameterClass="cn.fanyamin.domain.RepeatInfo">
+insert into wfrepeat (repeatType,interval,
+daysInWeek,daysInMonth,weekInMonth,monthInYear,dateInYear,
+effectiveTime,expireTime,startHour,startMinute,startSecond,
+alwaysRepeat) 
+values(#repeatType#,#interval#,#daysInWeek#,
+#daysInMonth#,#weekInMonth#,#monthInYear#,#dateInYear#,
+datetime(#effectiveTime#/1000, 'unixepoch'),
+datetime(#expireTime#/1000, 'unixepoch'),
+#startHour#,#startMinute#,#startSecond#,#alwaysRepeat#)
+<selectKey resultClass="int" keyProperty="repeatID">  
+        <!-- SELECT LAST_INSERT_ID() AS taskID  --> 
+        SELECT seq as repeatID from sqlite_sequence where name='wfrepeat'
+</selectKey>
+</insert>
+
+<select id="retrieveRepeatInfo" resultClass="cn.fanyamin.domain.RepeatInfo">
+select repeatID, repeatType,interval,
+daysInWeek,daysInMonth,weekInMonth,monthInYear,dateInYear,
+strftime('%s', effectiveTime) * 1000 as effectiveTime,
+strftime('%s', expireTime) * 1000 as expireTime,
+startHour,startMinute,startSecond,
+alwaysRepeat from wfrepeat where repeatID=#repeatID#
+</select>
+
+<update id="updateRepeatInfo" parameterClass="cn.fanyamin.domain.RepeatInfo">
+update wfrepeat set repeatID = #repeatID#, repeatType = #repeatType#,
+interval=#interval#,
+daysInWeek=#daysInWeek#,
+daysInMonth=#daysInMonth#,
+weekInMonth=#weekInMonth#,
+monthInYear=#monthInYear#,
+dateInYear=#dateInYear#,
+effectiveTime=datetime(#effectiveTime#/1000, 'unixepoch'),
+expireTime=datetime(#expireTime#/1000, 'unixepoch'),
+startHour=#startHour#,
+startMinute=#startMinute#,
+startSecond=#startSecond#,
+alwaysRepeat=#alwaysRepeat# where repeatID=#repeatID#
+</update>
+
+<delete id="deleteRepeatInfo" parameterClass="int">
+delete from wfrepeat where repeatID=#repeatID#
+</delete>
+
+<!-- ################# cleanup ################-->
+
+<delete id="cleanFinishedRemindTask"  parameterClass="int">
+delete from wfremind where remindID in 
+(select remindID from wfremind where status=2 Limit #count#)
+</delete>
+
+<delete id="cleanFinishedTask" parameterClass="int">
+<![CDATA[
+delete from wftask where taskID in (select taskID from wftask where 
+endtime is not null and strftime('%s',CURRENT_TIMESTAMP) - strftime('%s',updateTime) > #duration#
+limit 100)
+]]>
+</delete>
+
+<delete id="cleanFinishedEmailTask" parameterClass="int">
+<![CDATA[
+delete from wfemail where emailID in (select emailID from wfemail where status='END' limit #count#)
+]]>
+</delete>
+
+</sqlMap>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Item">
+<typeAlias alias="item" type="cn.fanyamin.domain.Item"/>
+<typeAlias alias="category" type="cn.fanyamin.domain.UserCategory"/>
+<typeAlias alias="map" type="java.util.Map"/>
+
+
+<insert id="createItem" parameterClass="item">
+	insert into wfitem(itemName,description, categoryID,itemType, userID)
+	values(#itemName#,#description#,#categoryID#,#itemType#,#userID#)
+  <selectKey resultClass="int" keyProperty="itemID">  
+		 <!-- SELECT LAST_INSERT_ID() AS itemID  -->
+		 SELECT seq as itemID from sqlite_sequence where name='wfitem'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveItem" parameterClass="int" resultClass="item">
+    select itemID,itemName,itemType,description,categoryID, userID, createTime    
+    from wfitem where itemID=#itemID#
+</select>
+
+<update id="updateItem" parameterClass="item">
+	update wfitem set itemName=#itemName#,description=#description#,
+    itemType=#itemType#,categoryID=#categoryID#	where itemid=#itemID#
+</update>
+
+<delete id="deleteItem" parameterClass="Integer">
+	delete from wfitem where itemid=#itemID#
+</delete>
+
+<select id="findItem" parameterClass="item" resultClass="item">
+    select itemID,itemName,itemType, description,categoryID, createTime    
+    from wfitem where itemName=#itemName# 
+    and categoryID = #categoryID# 
+</select>
+
+<select id="listItem" parameterClass="item" resultClass="item">
+    select itemID, itemName, itemType, description, categoryID, userID, 
+    strftime('%s', createTime) * 1000 as createTime   
+    from wfitem 
+</select>
+
+<select id="getCheckList" parameterClass="int" resultClass="item">
+    select itemID, itemName, itemType, description, categoryID, userID, 
+    strftime('%s', createTime) * 1000 as createTime  
+    from wfitem where userid=#userID# and itemtype in (3,4,5,6,7,8)
+</select>
+
+<select id="getItemList" parameterClass="item" resultClass="item">
+    select itemID,itemName,itemType,description,categoryID, userID, 
+    strftime('%s', createTime) * 1000 as createTime    
+    from wfitem where userID=#userID# and itemType=#itemType#  
+    <dynamic>
+        <isGreaterThan prepend="and" property="categoryID" compareValue="0">
+         categoryID=#categoryID#
+         </isGreaterThan>
+         <isNotNull prepend="and" property="itemName">
+         itemName like '%$itemName$%'
+         </isNotNull>
+       </dynamic>
+</select>
+
+<select id="getCategories" parameterClass="map" resultClass="category">
+    select categoryID,categoryName,description,categoryType,
+    strftime('%s', createTime) * 1000 as createTime      
+    from wfcategory where userID=#userID# and categoryType = #categoryType#
+</select>
+
+<select id="getUserCategories" parameterClass="int" resultClass="category">
+    select categoryID,categoryName,description,categoryType,
+    strftime('%s', createTime) * 1000 as createTime      
+    from wfcategory where userID=#userID#
+</select>
+
+<select id="getUserCategoriesByType" parameterClass="map" resultClass="category">
+    select categoryID,categoryName,description,categoryType,
+    strftime('%s', createTime) * 1000 as createTime      
+    from wfcategory where userID=#userID# and categoryType = #categoryType#
+</select>
+
+<insert id="createCategory" parameterClass="category">
+    insert into wfcategory(categoryName,description,categoryType,userID)
+    values(#categoryName#,#description#,#categoryType#,#userID#)
+  <selectKey resultClass="int" keyProperty="categoryID">  
+		 <!-- SELECT LAST_INSERT_ID() AS categoryID  -->
+		 SELECT seq as categoryID from sqlite_sequence where name='wfcategory' 
+  </selectKey> 
+</insert>
+
+<select id="retrieveCategory" parameterClass="int" resultClass="category">
+    select categoryID,categoryName,description,categoryType,
+strftime('%s', createTime) * 1000 as createTime     
+    from wfcategory where categoryID=#categoryID#
+</select>
+
+<update id="updateCategory" parameterClass="category">
+    update wfcategory set categoryName=#categoryName#,
+    description=#description# ,categoryType=#categoryType# 
+    where categoryid=#categoryID#
+</update>
+
+<delete id="deleteCategory" parameterClass="Integer">
+   delete from wfcategory where categoryid=#categoryID#
+</delete>
+
+</sqlMap>

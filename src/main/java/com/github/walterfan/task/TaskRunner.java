@@ -25,7 +25,7 @@ public class TaskRunner extends AbstractServer implements Runnable {
 		this.executor = Executors.newFixedThreadPool(nThreads);
 	}
 
-	@Override
+
 	public void run() {
 		while(!stopRequested) {
 			try {

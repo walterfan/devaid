@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Tool">
+<typeAlias alias="account" type="cn.fanyamin.domain.Account"/>
+<typeAlias alias="site" type="cn.fanyamin.domain.Site"/>
+<typeAlias alias="friend" type="cn.fanyamin.domain.Friend"/>
+<typeAlias alias="article" type="cn.fanyamin.domain.Article"/>
+<typeAlias alias="issue" type="cn.fanyamin.domain.Issue"/>
+
+
+<insert id="createAccount" parameterClass="account">
+    insert into wfaccount(userName, password, email, siteName, siteUrl, userID)
+    values(#userName#,#password#,#email#,#siteName#, #siteUrl#, #userID#)
+  <selectKey resultClass="int" keyProperty="accountID">  
+         <!-- SELECT LAST_INSERT_ID() AS accountID  -->
+         SELECT seq as accountID from sqlite_sequence where name='wfaccount'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveAccount" parameterClass="int" resultClass="account">
+    select userName, password, email, siteName, siteUrl, userID    
+    from wfaccount where accountID=#accountID#
+</select>
+
+<update id="updateAccount" parameterClass="account">
+    update wfaccount set userName=#userName#,password=#password#,
+    email=#email#, siteName=#siteName#, siteUrl= #siteUrl# where accountid=#accountID#
+</update>
+
+<delete id="deleteAccount" parameterClass="Integer">
+    delete from wfaccount where accountid=#accountID#
+</delete>
+
+<select id="findAccount" parameterClass="account" resultClass="account">
+    select accountID,userName, password, email, siteName, siteUrl, userID     
+    from wfaccount where site like '%$site$%' 
+    and userID = #userID# 
+</select>
+
+<select id="getListOfAccount" parameterClass="int" resultClass="account">
+    select accountID, userName, password, email, siteName, siteUrl, userID  
+    from wfaccount where userID=#userID#
+</select>
+
+<!-- ################## Site ######################## -->
+
+<insert id="createSite" parameterClass="site">
+    insert into wfsite(siteName, siteUrl, categoryID, userID)
+    values(#siteName#, #siteUrl#, #categoryID#,#userID#)
+  <selectKey resultClass="int" keyProperty="siteID">  
+         <!-- SELECT LAST_INSERT_ID() AS siteID  -->
+         SELECT seq as siteID from sqlite_sequence where name='wfsite'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveSite" parameterClass="int" resultClass="site">
+    select siteName, siteUrl, categoryID, userID    
+    from wfsite where siteID=#siteID#
+</select>
+
+<update id="updateSite" parameterClass="site">
+    update wfsite set siteName=#siteName#,siteUrl=#siteUrl#,
+    categoryID=#categoryID# where siteid=#siteID#
+</update>
+
+<delete id="deleteSite" parameterClass="Integer">
+    delete from wfsite where siteid=#siteID#
+</delete>
+
+<select id="findSite" parameterClass="site" resultClass="site">
+    select siteID,siteName, siteUrl, categoryID, userID      
+    from wfsite where siteName=#siteName# 
+    and userID = #userID# 
+</select>
+
+<select id="getListOfSite" parameterClass="int" resultClass="site">
+    select siteID,siteName, siteUrl, categoryID, userID   
+    from wfsite  where userID=#userID#
+</select>
+
+<!-- ##################### friend ########################### -->
+<insert id="createFriend" parameterClass="friend">
+    insert into wffriend(name,im,email,phone, mobile,address, birthday, comments, userID)
+    values(#name#,#im#,#email#,#phone#, #mobile#,#address#, #birthday#, #comments#, #userID#)
+  <selectKey resultClass="int" keyProperty="friendID">  
+         <!-- SELECT LAST_INSERT_ID() AS friendID  -->
+         SELECT seq as friendID from sqlite_sequence where name='wffriend'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveFriend" parameterClass="int" resultClass="friend">
+    select friendID, name,im,email,phone, mobile,address, birthday, comments, userID    
+    from wffriend where friendID=#friendID#
+</select>
+
+<update id="updateFriend" parameterClass="friend">
+    update wffriend set name=#name#,im=#im#,
+    email=#email#, phone=#phone#, mobile=#mobile#, address=#address#, 
+    birthday=#birthday#, comments=#comments# where friendid=#friendID#
+</update>
+
+<delete id="deleteFriend" parameterClass="Integer">
+    delete from wffriend where friendid=#friendID#
+</delete>
+
+<select id="findFriend" parameterClass="friend" resultClass="friend">
+    select friendID, name,im,email,phone, mobile,address, birthday, comments, userID      
+    from wffriend where name=#name# 
+    and userID = #userID# 
+</select>
+
+<select id="getListOfFriend" parameterClass="int" resultClass="friend">
+    select friendID, name,im,email,phone, mobile,address, birthday, comments, userID 
+    from wffriend  where userID=#userID#
+</select>
+
+<!-- ###################### Issue ########################## -->
+
+<insert id="createIssue" parameterClass="issue">
+    insert into wfissue(problem, cause, solution, comments, categoryID, userID) 
+    values(#problem#, #cause#, #solution#, #comments#, #categoryID#, #userID#)
+  <selectKey resultClass="int" keyProperty="issueID">  
+         <!-- SELECT LAST_INSERT_ID() AS issueID  -->
+         SELECT seq as issueID from sqlite_sequence where name='wfissue'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveIssue" parameterClass="int" resultClass="issue">
+    select issueID, problem, cause, solution, comments, categoryID, userID     
+    from wfissue where issueID=#issueID#
+</select>
+
+<update id="updateIssue" parameterClass="issue">
+    update wfissue set problem=#problem#,cause=#cause#,
+    solution=#solution#, comments=#comments#, categoryID=#categoryID# 
+    where issueid=#issueID#
+</update>
+
+<delete id="deleteIssue" parameterClass="Integer">
+    delete from wfissue where issueid=#issueID#
+</delete>
+
+<select id="findIssue" parameterClass="issue" resultClass="issue">
+    select issueID, problem, cause, solution, comments, categoryID, userID      
+    from wfissue where problem like '%$problem$%' 
+    and userID = #userID# 
+</select>
+
+<select id="getListOfIssue" parameterClass="int" resultClass="issue">
+    select issueID, problem, cause, solution, comments, categoryID, userID  
+    from wfissue  where userID=#userID#
+</select>
+
+<!-- ###################### Article ######################### -->
+
+<insert id="createArticle" parameterClass="article">
+    insert into wfarticle(topic, content, keywords, categoryID, userID) 
+    values(#topic#, #content#, #keywords#, #categoryID#, #userID#)
+  <selectKey resultClass="int" keyProperty="articleID">  
+         <!-- SELECT LAST_INSERT_ID() AS articleID  -->
+         SELECT seq as articleID from sqlite_sequence where name='wfarticle'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveArticle" parameterClass="int" resultClass="article">
+    select articleID, topic, content, keywords, categoryID, userID, createTime      
+    from wfarticle where articleID=#articleID#
+</select>
+
+<update id="updateArticle" parameterClass="article">
+    update wfarticle set topic=#topic#,content=#content#,
+    keywords=#keywords#, categoryID=#categoryID# 
+    where articleid=#articleID#
+</update>
+
+<delete id="deleteArticle" parameterClass="Integer">
+    delete from wfarticle where articleid=#articleID#
+</delete>
+
+<select id="findArticle" parameterClass="article" resultClass="article">
+    select articleID, topic, content, keywords, categoryID, userID, createTime        
+    from wfarticle where userID = #userID# 
+    <dynamic>
+        <isNotNull prepend="AND" property="topic">
+        topic like '%$topic$%' 
+        </isNotNull>
+        <isGreaterThan prepend="and" property="categoryID" compareValue="0">
+        categoryID = #categoryID#
+        </isGreaterThan>
+    </dynamic>
+</select>
+<select id="getListOfArticle" parameterClass="int" resultClass="article">
+    select articleID, topic, content, keywords, categoryID, userID, strftime('%s',createTime)    
+    from wfarticle  where userID=#userID#
+</select>
+
+</sqlMap>

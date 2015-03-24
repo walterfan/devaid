@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Book">
+<typeAlias alias="book" type="cn.fanyamin.domain.Book"/>
+<typeAlias alias="borrowLog" type="cn.fanyamin.domain.BorrowLog"/>
+<typeAlias alias="vo" type="cn.fanyamin.web.vo.BookVO"/>
+<typeAlias alias="criteria" type="cn.fanyamin.domain.BookSearchCriteria"/>
+<typeAlias alias="map" type="java.util.Map"/>
+
+
+<insert id="createBook" parameterClass="book">
+	INSERT INTO wfbooklib(bookSN, bookName,tags, categoryID)
+    values(#bookSN#, #bookName#,#tags#, #categoryID#);
+  <selectKey resultClass="int" keyProperty="bookID">  
+		 <!-- SELECT LAST_INSERT_ID() AS itemID  -->
+		 SELECT seq as bookID from sqlite_sequence where name='wfbooklib'  
+  </selectKey> 
+</insert>
+
+<select id="retrieveBook" parameterClass="int" resultClass="book">
+    select bookID, bookSN, bookName,tags, borrowLogID,categoryID, 
+    strftime('%s', createTime)*1000 as createTime    
+    from wfbooklib where bookID=#bookID#
+</select>
+
+<update id="updateBook" parameterClass="book">
+	update wfbooklib set bookName=#bookName#,bookSN=#bookSN#,tags = #tags#, 
+	borrowLogID=#borrowLogID#, categoryID=#categoryID#  where bookID=#bookID#
+</update>
+
+<delete id="deleteBook" parameterClass="Integer">
+	delete from wfbooklib where bookID=#bookID#
+</delete>
+
+<select id="findBook" parameterClass="book" resultClass="book">
+    select bookID, bookSN, bookName,tags, categoryID, strftime('%s', createTime)*1000 as createTime    
+    from wfbooklib
+</select>
+
+<select id="getAllBookCount" resultClass="int">
+    select count(bookID) from wfbooklib 
+</select>
+
+<select id="getBookCount" parameterClass="criteria" resultClass="int">
+    select count(a.bookID) from wfbooklib a left join wfborrowlog b on a.borrowLogID=b.borrowLogID 
+    where a.bookID > 0  
+    <isNotEmpty property="bookName">
+        and lower(a.bookName) like lower('%$bookName$%')
+    </isNotEmpty>
+    <isNotEmpty property="bookSN">
+        and lower(a.bookSN) like lower('%$bookSN$%')
+    </isNotEmpty>
+    <isNotEmpty property="borrower">
+        and EXISTS (SELECT 1 FROM wfborrowlog aa, wfuser bb WHERE aa.borrowerid=bb.userid 
+         and lower(bb.userName) like  lower('%$borrower$%'))
+    </isNotEmpty>
+    <isGreaterThan property="status" compareValue="0">
+        and a.borrowLogID > 0
+    </isGreaterThan> 
+    <isEqual property="status" compareValue="0">
+        and a.borrowLogID = 0
+    </isEqual> 
+    <isGreaterThan property="days" compareValue="0">
+        and (b.borrowDate is not null and b.returnDate is null 
+        and julianday(datetime('now'))- julianday(b.borrowDate) > #days#)
+    </isGreaterThan> 
+</select>
+
+<select id="listBook" parameterClass="map" resultClass="vo">
+    select a.bookID, a.bookSN, a.bookName,a.tags, a.categoryID, 
+    strftime('%s', a.createTime)*1000 as createTime ,
+    strftime('%s', b.borrowDate) * 1000 as borrowDate,
+    strftime('%s', b.returnDate) * 1000 as returnDate,              
+    ifnull(a.borrowLogID,0) as borrowLogID,
+    ifnull(b.borrowerID,0)  as borrowerID 
+    from wfbooklib a left join wfborrowlog b on a.borrowLogID=b.borrowLogID 
+    where a.bookID > 0     
+    <isNotEmpty property="criteria.bookName">
+        and lower(a.bookName) like lower('%$criteria.bookName$%')
+    </isNotEmpty>
+    <isNotEmpty property="criteria.tags">
+        and lower(a.tags) like lower('%$criteria.tags$%')
+    </isNotEmpty>
+    <isNotEmpty property="criteria.bookSN">
+        and lower(a.bookSN) like lower('%$criteria.bookSN$%')
+    </isNotEmpty>
+    <isNotEmpty property="criteria.borrower">
+        and EXISTS (SELECT 1 FROM wfborrowlog aa, wfuser bb WHERE aa.borrowerid=bb.userid 
+         and lower(bb.userName) like  lower('%$criteria.borrower$%'))
+    </isNotEmpty>
+    <isEqual property="criteria.status" compareValue="1">
+        and a.borrowLogID = 0
+    </isEqual> 
+    <isEqual property="criteria.status" compareValue="2">
+        and a.borrowLogID > 0
+    </isEqual> 
+    <isGreaterThan property="criteria.days" compareValue="0">
+        and (b.borrowDate is not null and b.returnDate is null 
+        and julianday(datetime('now'))- julianday(b.borrowDate) > #criteria.days#)
+    </isGreaterThan> 
+    <isGreaterThan property="criteria.categoryID" compareValue="0">
+        and categoryID = #criteria.categoryID# 
+    </isGreaterThan> 
+     limit #pageSize# offset #pageNo#
+</select>
+
+<select id="getAllBooks" resultClass="vo">
+   select a.bookID, a.bookSN, a.bookName,a.tags, a.categoryID, 
+    strftime('%s', a.createTime)*1000 as createTime ,
+    strftime('%s', b.borrowDate) * 1000 as borrowDate,
+    strftime('%s', b.returnDate) * 1000 as returnDate,
+    ifnull(a.borrowLogID,0) as borrowLogID,
+    ifnull(b.borrowerID,0)  as borrowerID 
+    from wfbooklib a left join wfborrowlog b on a.borrowLogID=b.borrowLogID
+ </select>
+
+<select id="getUserBooks" parameterClass="int" resultClass="vo">
+    select a.bookID, a.bookSN, a.bookName,a.tags, a.categoryID, 
+    strftime('%s', a.createTime)*1000 as createTime ,
+    strftime('%s', b.borrowDate) * 1000 as borrowDate,
+    strftime('%s', b.returnDate) * 1000 as returnDate,              
+    ifnull(a.borrowLogID,0) as borrowLogID,
+    ifnull(b.borrowerID,0)  as borrowerID     
+    from wfbooklib a ,wfborrowlog b where a.borrowLogID=b.borrowLogID 
+    and b.borrowerID = #userID#
+ </select>
+
+<select id="getUserBorrowLogs" parameterClass="int" resultClass="vo">
+     select  a.bookID, a.borrowLogID, a.borrowerID,b.userName as borrowerName,
+    strftime('%s', borrowDate) * 1000 as borrowDate,
+    strftime('%s', returnDate) * 1000 as returnDate,
+    strftime('%s', a.createTime) * 1000 as createTime             
+    from wfborrowlog a left join wfuser b on a.borrowerID=b.userID 
+    where a.borrowerID = #userID#
+</select>
+
+<select id="getBookBorrowLogs" parameterClass="int" resultClass="vo">
+    select  a.bookID, a.borrowLogID, a.borrowerID,b.userName as borrowerName,
+    strftime('%s', borrowDate) * 1000 as borrowDate,
+    strftime('%s', returnDate) * 1000 as returnDate,
+    strftime('%s', a.createTime) * 1000 as createTime             
+    from wfborrowlog a left join wfuser b on a.borrowerID=b.userID 
+    where a.bookID = #bookID#
+</select>
+
+<insert id="createBorrowLog" parameterClass="borrowLog">
+    insert into wfborrowlog(bookID, borrowerID,borrowDate,returnDate)
+    values(#bookID#, #borrowerID#,datetime(#borrowDate#/1000, 'unixepoch'),
+    datetime(#returnDate#/1000, 'unixepoch'))
+  <selectKey resultClass="int" keyProperty="borrowLogID">  
+		 <!-- SELECT LAST_INSERT_ID() AS borrowLogID  -->
+		 SELECT seq as borrowLogID from sqlite_sequence where name='wfborrowlog' 
+  </selectKey> 
+</insert>
+
+<select id="retrieveBorrowLog" parameterClass="int" resultClass="borrowLog">
+    select borrowLogID, bookID, borrowerID,
+    strftime('%s', borrowDate) * 1000 as borrowDate,
+    strftime('%s', returnDate) * 1000 as returnDate,
+    strftime('%s', createTime) * 1000 as createTime     
+    from wfborrowlog where borrowLogID=#borrowLogID#
+</select>
+
+<update id="updateBorrowLog" parameterClass="borrowLog">
+    update wfborrowlog set borrowerID=#borrowerID#,
+    bookID=#bookID#,
+    borrowDate=datetime(#borrowDate#/1000, 'unixepoch'),
+    returnDate=datetime(#returnDate#/1000, 'unixepoch') 
+    where borrowLogID=#borrowLogID#
+</update>
+
+<delete id="deleteBorrowLog" parameterClass="Integer">
+   delete from wfborrowlog where borrowLogID=#borrowLogID#
+</delete>
+
+<delete id="deleteBorrowLogs" parameterClass="Integer">
+   delete from wfborrowlog where bookID=#bookID#
+</delete>
+
+</sqlMap>

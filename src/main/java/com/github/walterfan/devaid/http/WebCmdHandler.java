@@ -33,7 +33,6 @@ public class WebCmdHandler implements WebHandler {
 
     protected static final String DEFAULT_RESPONSE = "Welcome to Web Service";
     
-	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -70,17 +69,6 @@ public class WebCmdHandler implements WebHandler {
 
 	}
 
-	@Override
-	public String getPath() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean getNeedAuth() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
     protected WebContent getRequestInfo(HttpServletRequest request) throws IOException {
         WebContent queryInfo = new WebContent();
@@ -139,5 +127,17 @@ public class WebCmdHandler implements WebHandler {
 	        }
 
 	    }
+
+
+		public String getPath() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		public boolean getNeedAuth() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 
 }

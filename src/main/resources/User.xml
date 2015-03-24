@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="User">
+	<typeAlias alias="User" type="cn.fanyamin.domain.User" />
+	<typeAlias alias="Role" type="cn.fanyamin.domain.Role" />
+	<typeAlias alias="Module" type="cn.fanyamin.domain.Module" />
+	<typeAlias alias="Function" type="cn.fanyamin.domain.Function" />
+	<typeAlias alias="EmailTask" type="cn.fanyamin.domain.EmailTask" />
+ 
+	<resultMap id="getUserResult" class="cn.fanyamin.domain.User">
+		<result property="userID" column="userID" jdbcType="INTEGER"
+			javaType="int" />
+		<result property="userName" column="userName" jdbcType="VARCHAR"
+			javaType="string" />
+		<result property="password" column="password" jdbcType="VARCHAR"
+			javaType="string" />
+		<result property="email" column="email" jdbcType="VARCHAR"
+			javaType="string" />
+		<result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"
+			javaType="string" />
+		<result property="role" column="roleID" select="retrieveRole" />
+	</resultMap>
+	
+	<resultMap id="getRoleResult" class="cn.fanyamin.domain.Role">
+		<result property="roleID" column="roleID" jdbcType="INTEGER"
+			javaType="int" />
+		<result property="roleName" column="roleName" jdbcType="VARCHAR"
+			javaType="string" />
+        <result property="description" column="description" jdbcType="VARCHAR"
+            javaType="string" />
+		<result property="parentRoleID" column="parentRoleID" jdbcType="INTEGER"
+			javaType="int" />
+		<result property="moduleList" column="roleID" select="getModuleList" />
+	</resultMap>
+	
+	<resultMap id="getModuleResult" class="cn.fanyamin.domain.Module">
+        <result property="moduleID" column="moduleID" jdbcType="INTEGER"
+            javaType="int" />
+        <result property="moduleName" column="moduleName" jdbcType="VARCHAR"
+            javaType="string" />
+        <result property="description" column="description" jdbcType="VARCHAR"
+            javaType="string" />
+        <result property="parentModuleID" column="parentModuleID" jdbcType="INTEGER"
+            javaType="int" />
+        <result property="moduleStatus" column="moduleStatus" jdbcType="INTEGER"
+            javaType="int" />
+        <result property="moduleLink" column="moduleLink" jdbcType="VARCHAR"
+            javaType="string" />
+        <result property="functionList" column="moduleID" select="getFunctionList" />
+    </resultMap>
+    
+	<insert id="createUser" parameterClass="User">
+		insert into wfuser(username,password,email,phoneNumber,roleid)
+		values(#userName#,#password#,#email#,#phoneNumber#,#roleID#)
+		<selectKey resultClass="int" keyProperty="userID">  
+		 <!-- SELECT LAST_INSERT_ID() AS userID  -->
+		 SELECT seq as userID from sqlite_sequence where name='wfuser'
+		</selectKey>
+	</insert>
+	<select id="retrieveUser" parameterClass="int" resultMap="getUserResult"> select
+		userID, userName,password,email,phoneNumber,roleID from wfUser where
+		userID=#userID# </select>
+		
+	<update id="updateUser" parameterClass="User"> update wfUser set
+		UserName=#userName#,password=#password#,
+		email=#email#,phoneNumber=#phoneNumber#, roleid = #roleID# where
+		userid=#userID# </update>
+		
+	<delete id="deleteUser" parameterClass="Integer"> delete from wfUser where
+		userid=#userID# </delete>
+		
+	<select id="findUser" parameterClass="User" resultMap="getUserResult"> select
+		userID, userName,password,email,phoneNumber, roleID from wfUser where
+		userName=#userName# 
+	</select>
+	
+	<select id="findUserByName" parameterClass="string" resultMap="getUserResult"> select
+        userID, userName,password,email,phoneNumber, roleID from wfUser where
+        userName=#userName# 
+    </select>
+    
+	<select id="listUser" resultMap="getUserResult"> select userID,
+		userName,password,email,phoneNumber, roleID from wfUser where roleID > 1
+	</select>
+		
+<!-- **************** role ********************* -->
+	<insert id="createRole" parameterClass="Role">
+		insert into wfrole(roleName,description,parentRoleID)
+		values(#roleName#,#description#,#parentRoleID#)
+		<selectKey resultClass="int" keyProperty="roleID">  
+         <!-- SELECT LAST_INSERT_ID() AS roleID -->
+		 SELECT seq as roleID from sqlite_sequence where name='wfrole' 
+		</selectKey>
+	</insert>
+	
+	<select id="retrieveRole" parameterClass="int" resultMap="getRoleResult">
+		select roleID,roleName, description, parentRoleID from wfrole where roleID=#roleID# 
+	</select>
+	
+	<delete id="deleteRole" parameterClass="Integer"> 
+        delete from wfrole where roleid=#roleID# 
+	</delete>
+		
+	<update id="updateRole" parameterClass="Role"> 
+	update wfrole set
+		roleName=#roleName#,description=#description#,parentRoleID=#parentRoleID# where roleID=#roleID# 
+	</update>
+	
+	<select id="listRole" resultMap="getRoleResult"> 
+	select roleID,roleName,description, parentRoleID from wfrole where rolename != 'SuperAdmin'
+	</select>
+	
+	<select id="getFunctionList" parameterClass="Integer" resultClass="Function"> 
+	select a.*, b.moduleid from wffunction a left join wfoperation b 
+    on a.functionid=b.functionid where b.moduleid=#moduleID#
+    </select>
+    
+	<!-- **************** Module *********************** -->	
+ 
+    <select id="getModuleList" parameterClass="Integer" resultMap="getModuleResult">
+    select a.moduleID, a.moduleName, a.description, a.moduleLink,
+    a.parentModuleID , ifnull(b.roleid,0) as modulestatus 
+    from wfmodule a  left join wfprivilege b on 
+    a.moduleid=b.moduleid and b.roleid=#roleID#
+    </select>
+ 	
+	<select id="getAllModuleList" resultClass="Module"> 
+	select moduleID,moduleName,description, moduleLink, parentModuleID,
+	1 as modulestatus from wfmodule 
+	</select>
+	
+	<select id="getSubModuleList" parameterClass="Integer" resultClass="Module"> 
+    select moduleID,moduleName,description, moduleLink, parentModuleID,
+    1 as modulestatus from wfmodule where parentModuleID=#moduleID#
+    </select>
+	
+	<select id="getFavoriteModules" parameterClass="Integer"  resultClass="Module"> 
+    select moduleID,moduleName,description, moduleLink, parentModuleID 
+    from wfmodule  where moduleID in 
+    (select moduleID from  wffavorite where userID = #userID# or userID=0)
+    </select>
+	
+	<insert id="createModule" parameterClass="Module">
+	insert into wfmodule(moduleName,description,moduleLink,parentModuleID)
+	values(#moduleName#,#description#,#moduleLink#, #parentModuleID#)
+	<selectKey resultClass="int" keyProperty="moduleID">  
+	<!-- SELECT LAST_INSERT_ID() AS module -->
+	SELECT seq as moduleID from sqlite_sequence where name='wfmodule'
+	</selectKey>
+	</insert>
+	
+	<select id="retrieveModule" parameterClass="int" resultMap="getModuleResult">
+	select moduleID,moduleName,description, moduleLink, parentModuleID,
+    1 as modulestatus from wfmodule where moduleID=#moduleID# 
+	</select>
+	
+	<delete id="deleteModule" parameterClass="Integer"> 
+	delete from wfmodule where moduleid=#moduleID# 
+	</delete>
+	
+	<update id="updateModule" parameterClass="Module"> 
+	update wfmodule set
+	moduleName=#moduleName#,description=#description#,
+	moduleLink=#moduleLink#, parentModuleID=#parentModuleID# 
+	where moduleID=#moduleID# 
+	</update>
+	
+	<insert id="createPrivilege" parameterClass="map">
+    insert into wfprivilege(moduleID, roleID)
+    values(#moduleID#,#roleID#)
+    </insert>
+    
+    <delete id="deletePrivilege" parameterClass="map">
+    delete from wfprivilege where moduleID=#moduleID# and roleID=#roleID#
+    </delete>
+    
+    <!-- **************** EmailTask ********************* -->
+    <insert id="createEmailTask" parameterClass="EmailTask">
+    insert into wfemail(toaddr,subject, content, contenttype, status, executor) 
+    values(#toAddr#,#subject#, #content#, #contentType#, #status#, #executor#)
+        <selectKey resultClass="int" keyProperty="emailID">  
+         <!-- SELECT LAST_INSERT_ID() AS userID  -->
+         SELECT seq as emailID from sqlite_sequence where name='wfemail'
+        </selectKey>
+    </insert>
+    
+    <select id="retrieveEmailTask" parameterClass="int" resultClass="EmailTask">
+    select toaddr,subject, content, contenttype, status, executor from wfemail where emailID=#emailID#
+    </select>
+    
+    <update id="updateEmailTask" parameterClass="EmailTask">
+    update wfemail set toaddr = #toAddr#,subject = #subject#, content=#content#, 
+    contenttype = #contentType#, status = #status# where emailID=#emailID#
+    </update>
+
+    <delete id="deleteEmailTask" parameterClass="int">
+    delete from wfemail where emailID=#emailID#
+    </delete>
+
+    <select id="getEmailTaskList" parameterClass="map" resultClass="EmailTask"> 
+    <![CDATA[
+    select toaddr,subject, content, contenttype, status, executor from wfemail 
+    where executor=#executor# and status=#status# limit #count# 
+    ]]>
+    </select>
+
+    <update id="fetchEmailTaskList" parameterClass="map"> 
+    <![CDATA[
+    update wfemail set executor = #executor# , status='START', startTime=CURRENT_TIMESTAMP 
+    where emailID in (select emailID from wfemail where ((status='SCHEDULED' and executor is null)  
+    or (status='START' and strftime('%s',CURRENT_TIMESTAMP) - strftime('%s',startTime) > #duration#)) limit #count#)
+    ]]>
+    </update>
+
+</sqlMap>

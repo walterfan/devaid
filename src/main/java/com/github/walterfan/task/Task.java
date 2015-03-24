@@ -34,7 +34,7 @@ public class Task extends Command implements Comparable<Task>, Callable<Integer>
 		else return 0;
 	}
 	
-	@Override
+
 	public int compareTo(Task other) {
 		int ret = compare(this.priority, other.getPriority());
 		if(ret != 0) return ret;
@@ -99,7 +99,7 @@ public class Task extends Command implements Comparable<Task>, Callable<Integer>
 		this.priority = priority;
 	}
 
-	@Override
+
 	public Integer call() throws Exception {
 		if(null != handler) {
 			return handler.call();
