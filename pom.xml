@@ -20,6 +20,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<dropwizard.version>0.7.1</dropwizard.version>
 		<resteasy.version>3.0.9.Final</resteasy.version>
+        <spring.version>3.2.9.RELEASE</spring.version>
+        <mybatis.version>3.2.8</mybatis.version>
 	</properties>
 
 	<repositories>
@@ -167,13 +169,13 @@
 			<artifactId>xercesImpl</artifactId>
 			<version>2.9.1</version>
 		</dependency>
-
+		<!--
 		<dependency>
-			<groupId>org.apache.ibatis</groupId>
-			<artifactId>ibatis-sqlmap</artifactId>
-			<version>2.3.4.726</version>
+			<groupId>org.ibatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
 		</dependency>
-
+		-->
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
@@ -289,8 +291,15 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
-			<version>3.2.8</version>
+			<version>${mybatis.version}</version>
 		</dependency>
+
+                <dependency>
+                  <groupId>org.mybatis</groupId>
+                  <artifactId>mybatis-spring</artifactId>
+                  <version>1.2.2</version>
+                  <type>zip</type>
+                </dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>

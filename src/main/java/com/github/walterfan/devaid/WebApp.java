@@ -40,10 +40,10 @@ public class WebApp extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Log.getLogger(WebApp.class);
-	//private static final String JSP_WIKI_WAR = "/workspace/java/JSPWiki.war";
+	private static final String CONFIG_DIR = "./etc";
 	private static final String JSP_WIKI_DIR = "/workspace/exam/JSPWiki";
 	private static final String JSP_WIKI_PATH = "/wiki";
-	private static final String JSP_WIKI_TMP = "/workspace/tmp";
+	private static final String JSP_WIKI_TMP = "/workspace/temp";
 	private static final String HOME_PAGE = "index.html";
 	private static final String HOME_FOLDER = "/workspace/cpp/cwhat/site";
 	
@@ -67,9 +67,8 @@ public class WebApp extends HttpServlet {
 	public void start(int nPort) throws Exception {
 		_server = new Server(nPort);
 		
-		LoginService loginService = new HashLoginService("MyRealm",
-                "src/main/resources/realm.properties");
-        _server.addBean(loginService);
+		LoginService loginService = new HashLoginService("MyRealm", CONFIG_DIR + "/realm.properties");
+                _server.addBean(loginService);
 		
 		HandlerList handlers = new HandlerList();
 

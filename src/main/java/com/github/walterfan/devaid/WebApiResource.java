@@ -26,14 +26,15 @@ public class WebApiResource {
 	private final String staticPath;
 	
 	public WebApiResource() {
-		staticPath = "src/main/webapp/static";
+		staticPath = "./site";
 	}
 	
 	@GET
 	@Produces("text/html")
 	public Response index() throws URISyntaxException {
 		
-		//System.setProperty("user.dir", "./site");                
+		//System.setProperty("user.dir", "./site");  
+                logger.info("Do not specify the parameter of the api");
 		File f = new File(staticPath + "/index.html");
 		String mt = new MimetypesFileTypeMap().getContentType(f);
 		return Response.ok(f, mt).build();
