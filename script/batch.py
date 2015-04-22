@@ -1,3 +1,6 @@
+'''
+    like bat file, execute the steps in batch.json 
+'''
 import os,sys,subprocess
 import time,thread
 import codecs

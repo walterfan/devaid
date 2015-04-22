@@ -1,5 +1,7 @@
 package com.github.walterfan.service;
 
+import com.github.walterfan.server.IServer;
+
 /**
  * @author walter
  * 

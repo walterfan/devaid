@@ -15,7 +15,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.github.walterfan.service.IServer;
+import com.github.walterfan.server.IServer;
 
 
 /**

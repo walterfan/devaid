@@ -1,15 +1,12 @@
 package com.github.walterfan.devaid.sql;
 
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ibatis.mapping.StatementType;
 
-
+/*
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
@@ -17,17 +14,17 @@ import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.StatementType;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
-import com.ibatis.sqlmap.engine.scope.StatementScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;*/
 
 
 public class IbatisSQLTemplate extends SQLTemplate{
     
     private static Log logger = LogFactory.getLog(IbatisSQLTemplate.class);
-    private SqlMapClient sqlMapper;
+    //private SqlMapClient sqlMapper;
 
     public void loadFromStream(InputStream is) throws Exception {
         
-        try {
+       /* try {
             Map<String, SQLCommands> sqlsMap = super.getSqlMap();
             
             sqlMapper = SqlMapClientBuilder.buildSqlMapClient(is);
@@ -63,11 +60,11 @@ public class IbatisSQLTemplate extends SQLTemplate{
             }            
         } finally {
             IOUtils.closeQuietly(is);
-        }
+        }*/
     } 
 
     public String transStatementType(StatementType st) {
-        if (st == st.UNKNOWN) {
+        /*if (st == st.UNKNOWN) {
             return "Unknown";
         } else if (st == st.SELECT) {
             return "Select";
@@ -79,7 +76,8 @@ public class IbatisSQLTemplate extends SQLTemplate{
             return "Procedure";
         } else {
             return "Update";
-        }
+        }*/
+    	return "";
     }
 
     public static void main(String[] args) {

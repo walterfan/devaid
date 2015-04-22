@@ -2,7 +2,7 @@ package com.github.walterfan.util.jms;
 
 import org.apache.activemq.broker.BrokerService;
 
-import com.github.walterfan.service.IServer;
+import com.github.walterfan.server.IServer;
 import com.github.walterfan.util.io.ConsoleUtils;
 import com.github.walterfan.util.net.SocketUtils;
 
