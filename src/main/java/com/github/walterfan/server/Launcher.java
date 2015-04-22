@@ -32,7 +32,7 @@ public class Launcher implements ILauncher {
 
 	private static final String FOOTER =
 
-	"For more instructions, see our website at: http://jwhat.googlecode.com";
+	"For more instructions, see our website at: http://walterfan.github.com";
 
 	private String jarFile ;
 	
