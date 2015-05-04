@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.github.walterfan.server.IServer;
 import com.github.walterfan.util.JarUtils;
 
 /**

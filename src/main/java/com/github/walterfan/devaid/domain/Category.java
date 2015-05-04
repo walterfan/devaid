@@ -2,10 +2,13 @@ package com.github.walterfan.devaid.domain;
 
 import java.sql.Timestamp;
 
+import org.apache.ibatis.type.Alias;
+
 /**
  * @author walter
  * 
  */
+@Alias("Category")
 public class Category extends BaseObject {
     
     public final static int CATEGORY_TYPE_TASK = 1;

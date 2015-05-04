@@ -22,6 +22,8 @@ import com.github.walterfan.util.JarUtils;
  *
  */
 public class Launcher implements ILauncher {
+	private static final String SERVICE_CONTEXT_XML = "service-context.xml";
+
 	private static Log logger = LogFactory.getLog(Launcher.class);
 	
 	private static final String VERSION = "0.1";
@@ -52,7 +54,7 @@ public class Launcher implements ILauncher {
 	public synchronized void init() throws Exception {
 		if(null == service) {
 			beanFactory = new ClassPathXmlApplicationContext(
-		        new String[] {"service-context.xml"});
+		        new String[] {SERVICE_CONTEXT_XML});
 		
 			service= (IServer)beanFactory.getBean("appServer");
 		}

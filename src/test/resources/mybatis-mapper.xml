@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.walterfan.devaid.mybatis.LinkMapper">
+    <cache />
+    
+    <!-- Mapping Parent -->
+    <resultMap type="com.github.walterfan.devaid.domain.Link" id="LinkMap">
+        <id column="id" property="id"  />
+        <result column="name" property="name"  /> 
+        <result column="url"  property="url"  /> 
+        <result column="tags" property="tags"  /> 
+        <result column="categoryid" property="categoryID"  /> 
+        
+        <!-- if collection is used SQL should be in XML 
+        <collection property="children" column="parentId" select="selectAllChildren" javaType="ArrayList" />
+        -->
+    </resultMap>
+ 
+  
+    <!-- Mapper.selectAllParent() -->
+    <select id="selectAllLink" resultMap="LinkMap" timeout="10">
+        select a.id, a.name, a.url, a.tags, b.categoryid 
+        from link a, linkcategory b where a.id=b.linkid
+    </select>
+ 
+</mapper>

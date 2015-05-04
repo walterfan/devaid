@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- - Application context definition for MDP sever - Walter Fan on 2010-02-23 
+    remove DB dependency on 8/2 , replace mdpNodeDao with cachedNodeDao -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans-3.2.xsd" default-autowire="byName">
+
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>jdbc.properties</value>
+                <value>devaid.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding">
+            <value>utf-8</value>
+        </property>
+    </bean>
+    
+    <bean id="serviceMgr" class="com.github.walterfan.service.ServiceMgr">
+<!--         <property name="enabledService" value="${devaid.enabledService}"/> -->
+        <property name="serviceMap">
+            <map>             
+<!--                 
+                <entry key="rtpReceiver" value-ref="RtpReceiver" />
+                <entry key="sippReceiver" value-ref="SipReceiver" />
+ -->              </map>
+        </property>
+    </bean>
+    
+    <bean id="myDataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource" destroy-method="close">
+    </bean>
+    
+    
+    <bean id="mySqlMapClient" class="org.mybatis.spring.SqlSessionFactoryBean">
+    </bean>
+    
+   <bean id="linkDao" class="com.github.walterfan.dao.LinkDao">
+    <property name="sqlSessionFactory" ref="mySqlMapClient"/>
+    </bean>
+    
+    <bean id="logServer" class="com.github.walterfan.server.logger.LogServer">
+    </bean>
+    
+   
+    <bean id="configService" class="com.github.walterfan.service.ConfigService">
+    </bean>
+    
+  
+    
+</beans>

@@ -1,4 +1,6 @@
-package com.github.walterfan.service;
+package com.github.walterfan.server;
+
+import com.github.walterfan.server.IServer;
 
 /**
  * The Interface IComparableServer.

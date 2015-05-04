@@ -1,4 +1,4 @@
-package com.github.walterfan.service;
+package com.github.walterfan.server;
 
 /**
  * The Interface IConfigurableServer.
