@@ -10,8 +10,11 @@
         <result column="name" property="name"  /> 
         <result column="url"  property="url"  /> 
         <result column="tags" property="tags"  /> 
-        <result column="categoryid" property="categoryID"  /> 
-        
+
+        <association property="category" javaType="com.github.walterfan.devaid.domain.Category">
+		    <id property="categoryID" column="categoryid"/>
+		    <result property="categoryName" column="categoryname"/>
+		</association>
         <!-- if collection is used SQL should be in XML 
         <collection property="children" column="parentId" select="selectAllChildren" javaType="ArrayList" />
         -->
@@ -20,8 +23,9 @@
   
     <!-- Mapper.selectAllParent() -->
     <select id="selectAllLink" resultMap="LinkMap" timeout="10">
-        select a.id, a.name, a.url, a.tags, b.categoryid 
-        from link a, linkcategory b where a.id=b.linkid
+       select a.id, a.name, a.url, a.tags, b.categoryid, c.name as categoryname 
+       from link a, linkcategory b, category c 
+       where a.id=b.linkid and b.categoryid=c.id
     </select>
  
 </mapper>

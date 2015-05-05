@@ -15,7 +15,7 @@ public class Link extends BaseObject{
 	private String name;
 	private String url;
 	private String tags;
-	private int categoryID;
+	private Category category;
 	public int getId() {
 		return id;
 	}
@@ -40,11 +40,11 @@ public class Link extends BaseObject{
 	public void setTags(String tags) {
 		this.tags = tags;
 	}
-	public int getCategoryID() {
-		return categoryID;
+	public Category getCategory() {
+		return category;
 	}
-	public void setCategoryID(int categoryID) {
-		this.categoryID = categoryID;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 	
 	
