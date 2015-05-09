@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -33,24 +36,41 @@ import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
 import com.github.walterfan.devaid.http.WebCmdHandler;
 import com.github.walterfan.devaid.http.WebHandler;
+import com.github.walterfan.util.ConfigLoader;
 
 public class WebApp extends HttpServlet {
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Log.getLogger(WebApp.class);
 	private static final String CONFIG_DIR = "./etc";
-	private static final String JSP_WIKI_DIR = "/workspace/exam/JSPWiki";
-	private static final String JSP_WIKI_PATH = "/wiki";
-	private static final String JSP_WIKI_TMP = "/workspace/temp";
-	private static final String HOME_PAGE = "index.html";
-	private static final String HOME_FOLDER = "/workspace/cpp/cwhat/site";
+	private static String CONFIG_FILE = "devaid.properties";
+	private static String JSP_WIKI_DIR = "/workspace/exam/JSPWiki";
+	private static String JSP_WIKI_PATH = "/wiki";
+	private static String JSP_WIKI_TMP = "/workspace/temp";
+	private static int WEB_PORT = 1975;
+	private static String HOME_PAGE = "index.html";
+	private static String HOME_FOLDER = "/workspace/cpp/cwhat/site";
 	
 	private Server _server;
 	private WebHandler webHandler;
 
-
+	public void init() {
+		ConfigLoader cfgLoader = ConfigLoader.getInstance();
+		try {
+			cfgLoader.loadFromClassPath(CONFIG_FILE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JSP_WIKI_DIR = cfgLoader.getProperty("JSP_WIKI_DIR","/workspace/exam/JSPWiki");
+		JSP_WIKI_PATH = cfgLoader.getProperty("JSP_WIKI_PATH","/wiki");
+		JSP_WIKI_TMP = cfgLoader.getProperty("JSP_WIKI_TMP","/workspace/temp");
+		HOME_PAGE = cfgLoader.getProperty("HOME_PAGE","index.html");
+		HOME_FOLDER = cfgLoader.getProperty("HOME_FOLDER","./site");
+		WEB_PORT = NumberUtils.toInt(cfgLoader.getProperty("WEB_PORT","1975"));
+	}
 	
 	public WebHandler getWebHandler() {
 		return webHandler;
@@ -196,8 +216,9 @@ public class WebApp extends HttpServlet {
 	
 	public static void main(String[] args) throws Exception {
 
-		int nPort = args.length == 0 ? 1975 : Integer.parseInt(args[0]);
+		int nPort = args.length == 0 ? WEB_PORT : Integer.parseInt(args[0]);
 		WebApp webApp = new WebApp();
+		webApp.init();
 		WebHandler webHandler = new WebCmdHandler();
 		webApp.setWebHandler(webHandler);
 		
