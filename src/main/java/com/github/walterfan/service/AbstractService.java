@@ -45,5 +45,8 @@ public abstract class AbstractService extends AbstractServer implements IService
     }
 
     
+	public String getName() {
+		return this.getClass().getSimpleName();
+	}
 
 }

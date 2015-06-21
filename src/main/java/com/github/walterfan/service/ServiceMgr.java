@@ -32,9 +32,9 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /** The service map. */
     private Map<String, IService> serviceMap = new LinkedHashMap<String, IService>();
     
-    private String enabledService;
+    private String enabledService = "";
     
-    private Set<String> enabledServiceSet = new HashSet<String>();;
+    private Set<String> enabledServiceSet = new HashSet<String>();
 
     /**
      * Instantiates a new service mgr.
@@ -143,7 +143,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
         	
             IService svc = entry.getValue();
             if (svc != null) {
-                logger.info(svc.getName() + " start, isStarted="
+                logger.info(svc.getName() + " start..., isStarted="
                         + svc.isStarted());
                 svc.start();
                 logger.info(svc.getName() + " started, isStarted="
@@ -169,7 +169,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
         	}
             IService svc = entry.getValue();
             if (svc != null) {
-                logger.info(svc.getName() + " stop, isStarted="
+                logger.info(svc.getName() + " stop..., isStarted="
                         + svc.isStarted());
                 try {
                     svc.stop();
@@ -196,7 +196,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
         	}
             IService svc = entry.getValue();
             if (svc != null) {
-                logger.info(svc.getName() + " init, isStarted="
+                logger.info(svc.getName() + " init..., isStarted="
                         + svc.isStarted());
                 svc.init();
                 logger.info(svc.getName() + " inited, isStarted="
@@ -219,7 +219,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
         	}
             IService svc = entry.getValue();
             if (svc != null) {
-                logger.info(svc.getName() + " clean, isStarted="
+                logger.info(svc.getName() + " clean..., isStarted="
                         + svc.isStarted());
                 svc.clean();
                 logger.info(svc.getName() + " cleaned, isStarted="
