@@ -178,32 +178,5 @@ public class XmlUtils {
 		 return "Not Support now";
 	 }
 
-	public static void main(String[] args) throws Exception {
-		
-        ConfigLoader cfgLoader = ConfigLoader.getInstance();
-        try {
-			cfgLoader.loadFromClassPath("devaid.properties");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return;
-		}
-    	
-		try {
-       	 String filename = "S:\\Walter\\log\\clientparam_mc.txt";
-       	 File file = new File(filename);
-       	 byte[] bytes = FileUtil.readFromFile(file);
-       	/* String xml = new String(EncodeUtils.decodeBase64(bytes));
-       	 System.out.println(xml);
-       	 System.out.println("------------------");
-       	 XmlElementHandler handler = new XmlElementHandler();
-       	 traversal(xml, handler);
-       	 System.out.println(handler.toString());*/
-       	 System.out.println(decode(new String(bytes)));
-       	
-       	ParamUtils.writeDB(cfgLoader, "insert_unify_docshow_mc", XmlElementHandler.parameterMap);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-                
-	}	
+
 }
