@@ -57,6 +57,12 @@ public final class GlobalBeanFactory {
         return instance;
     }
 
+    public static synchronized GlobalBeanFactory getInstance(String xmlFiles) {
+    	String[] arrXmlFiles = xmlFiles.split(",|;");
+        setXmlConfigFiles(arrXmlFiles);        
+        return getInstance();
+    }
+    
     /**
      * Sets the xml config files.
      *
