@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid.http;
+package com.github.walterfan.devaid.webmonitor;
 /** 
 * information holder of http request 
 * 

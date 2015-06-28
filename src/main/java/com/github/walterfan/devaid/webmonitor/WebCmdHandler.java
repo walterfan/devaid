@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid.http;
+package com.github.walterfan.devaid.webmonitor;
 
 import java.io.IOException;
 import java.io.InputStream;

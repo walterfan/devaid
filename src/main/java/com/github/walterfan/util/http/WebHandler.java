@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid.http;
+package com.github.walterfan.util.http;
 
 import java.io.IOException;
 
@@ -26,15 +26,5 @@ public interface WebHandler {
     void handle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException;
 
-    /**
-     * 
-     * @return String
-     */
-    String getPath();
 
-    /**
-     * 
-     * @return boolean
-     */
-    boolean getNeedAuth();
 }
