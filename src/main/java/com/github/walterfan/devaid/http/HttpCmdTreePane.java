@@ -1,4 +1,4 @@
-package com.github.walterfan.devaid.webmonitor;
+package com.github.walterfan.devaid.http;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

@@ -4,7 +4,7 @@
  * Please keep the declaration 
  */
 
-package com.github.walterfan.devaid.webmonitor;
+package com.github.walterfan.devaid.http;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

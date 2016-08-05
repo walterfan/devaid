@@ -221,10 +221,11 @@ public class DbConn implements ConnectionHolder {
      *            none
      */
     public static void main(String[] args) {
-
-        if(args.length < 3) {
-            System.out.println("Arguments: url username password, load from configuration by default");
+    	DbConfig dbCfg = null;
+        if(args.length >= 3) {
+            //System.out.println("Arguments: url username password (load from configuration by default)");
             //return;
+        	
         }
         ConfigLoader cfgLoader = ConfigLoader.getInstance();
         try {
@@ -232,7 +233,7 @@ public class DbConn implements ConnectionHolder {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-        DbConfig dbCfg = new DbConfig(cfgLoader.get("db_driverClass"), cfgLoader.get("db_url"), cfgLoader.get("db_username"),cfgLoader.get("db_password"));
+        dbCfg = new DbConfig(cfgLoader.get("db_driverClass"), cfgLoader.get("db_url"), cfgLoader.get("db_username"),cfgLoader.get("db_password"));
         ConnectionProvider provider = new DriverManagerProvider();
         provider.setDbConfig(dbCfg);
         DbConn dc = new DbConn(provider);

@@ -33,7 +33,7 @@ public class JettyHandlerAdapter extends AbstractHandler{
         return webHandler;
     }
     
-    @Override
+    //@Override
 	public void handle(String target, Request base_request, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
     

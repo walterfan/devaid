@@ -97,7 +97,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /**
      * @param svc
      *            IService
-     * @see com.webex.mdp.service.IServiceMgr#addService(com.webex.mdp.service.IService)
+     * @see com.github.walterfan.service.IServiceMgr#addService(com.github.walterfan.service.IService)
      */
     public void addService(IService svc) {
         if (svc == null) {
@@ -112,7 +112,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
      * @param svcName
      *            String
      * @return IService
-     * @see com.webex.mdp.service.IServiceMgr#findService(java.lang.String)
+     * @see com.github.walterfan.service.IServiceMgr#findService(java.lang.String)
      */
     public IService findService(String svcName) {
         return serviceMap.get(svcName);
@@ -121,7 +121,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /**
      * @param svcName
      *            String
-     * @see com.webex.mdp.service.IServiceMgr#removeService(java.lang.String)
+     * @see com.github.walterfan.service.IServiceMgr#removeService(java.lang.String)
      */
     public void removeService(String svcName) {
         serviceMap.remove(svcName);
@@ -131,7 +131,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /*
      * (non-Javadoc)
      * 
-     * @see com.webex.mdp.service.AbstractService#onStart()
+     * @see com.github.walterfan.service.AbstractService#onStart()
      */
     @Override
     protected void onStart() throws Exception {
@@ -158,7 +158,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /*
      * (non-Javadoc)
      * 
-     * @see com.webex.mdp.service.AbstractService#onStop()
+     * @see com.github.walterfan.service.AbstractService#onStop()
      */
     @Override
     protected void onStop() throws Exception {
@@ -185,7 +185,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /*
      * (non-Javadoc)
      * 
-     * @see com.webex.mdp.service.AbstractService#onInit()
+     * @see com.github.walterfan.service.AbstractService#onInit()
      */
     @Override
     protected void onInit() throws Exception {
@@ -208,7 +208,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /*
      * (non-Javadoc)
      * 
-     * @see com.webex.mdp.service.AbstractService#onClean()
+     * @see com.github.walterfan.service.AbstractService#onClean()
      */
     @Override
     protected void onClean() throws Exception {
@@ -230,7 +230,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
 
     /**
      * @return Iterator<IService>
-     * @see com.webex.mdp.service.IServiceMgr#iterator()
+     * @see com.github.walterfan.service.IServiceMgr#iterator()
      */
     public Iterator<IService> iterator() {
         if (serviceMap == null) {
@@ -254,7 +254,7 @@ public class ServiceMgr extends AbstractService implements IServiceMgr {
     /*
      * (non-Javadoc)
      * 
-     * @see com.webex.mdp.service.IService#getName()
+     * @see com.github.walterfan.service.IService#getName()
      */
     public String getName() {
         return name;

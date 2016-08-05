@@ -32,7 +32,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang.StringUtils;
 
 import com.datastax.driver.core.ResultSet;
-
+import com.github.walterfan.util.cassandra.CassandraConfig;
 import com.github.walterfan.util.cassandra.CassandraConnection;
 import com.github.walterfan.util.swing.ActionHandlerFactory;
 import com.github.walterfan.util.swing.BinaryFileLoadHandler;
@@ -104,9 +104,11 @@ public class CassandraTool extends SwingTool {
                     FileUtils.writeByteArrayToFile(file, retStr.getBytes());
                 }*/
                 if(null == kvStore) {
-                	kvStore = new CassandraConnection();
+                	CassandraConfig casCfg = new CassandraConfig(txtHost.getText(), 9042,txtUsername.getText(), txtPassword.getText());
+                	kvStore = new CassandraConnection(casCfg);
+                	
                 }
-                kvStore.connect(txtHost.getText(), txtUsername.getText(), txtPassword.getText());
+                kvStore.connect();
            	 	ResultSet rs = kvStore.executeSql(sql);   
            	 	//logger.info(rs.getExecutionInfo().);
                 txtVal.setText(CassandraConnection.resultSetToString(rs));
@@ -355,7 +357,7 @@ public class CassandraTool extends SwingTool {
         //this.kvStore = new CassandraStore(host, port, location, token);
         //this.kvStore.init();
         
-        this.kvStore.connect(this.txtHost.getText(), this.txtUsername.getText(), this.txtPassword.getText());
+        this.kvStore.connect();
         isKvInited = true;
     }
     

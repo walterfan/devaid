@@ -4,12 +4,10 @@ import java.sql.Connection;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
+
 
 import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.dbutils.handlers.MapListHandler;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -262,6 +260,12 @@ public class DbOperator implements ConnectionOperator {
     public void setQueryTimeout(int seconds) {
         if(runner!=null) {
             runner.setQueryTimeout(seconds);
+        }
+    }
+    
+    public void setFetchSize(int fetchSize) {
+        if(runner!=null) {
+            runner.setFetchSize(fetchSize);
         }
     }
 }

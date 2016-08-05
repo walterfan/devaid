@@ -1,5 +1,9 @@
 package com.github.walterfan.devaid;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -43,4 +47,16 @@ public class AppTest
     	System.out.println(num > num2);
         assertTrue( true );
     }
+    
+    public void testUriMethods() {
+    	try {
+			URI aUri = new URI("https://www.github.com/api/v1");
+			String newUriStr = aUri.toString() + "/calls/id";
+			URI cUri = new URI(newUriStr);
+			System.out.println(cUri.toString());
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+    }
+    
 }

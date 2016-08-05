@@ -26,6 +26,8 @@ public class DbQueryRunner extends QueryRunner {
     private ConnectionHolder holder = null;
     
     private int queryTimeout = 0;
+    
+    private int fetchSize = 0;
     /**
      * constructor
      */
@@ -60,6 +62,9 @@ public class DbQueryRunner extends QueryRunner {
         if (queryTimeout > 0) {
             stmt.setQueryTimeout(queryTimeout);
         }
+        if(fetchSize>0){  
+            stmt.setFetchSize(fetchSize);  
+        }  
         return stmt;
     }
     
@@ -82,4 +87,14 @@ public class DbQueryRunner extends QueryRunner {
     public void setQueryTimeout(int queryTimeout) {
         this.queryTimeout = queryTimeout;
     }
+
+	public int getFetchSize() {
+		return fetchSize;
+	}
+
+	public void setFetchSize(int fetchSize) {
+		this.fetchSize = fetchSize;
+	}
+    
+    
 }
