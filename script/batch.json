@@ -1,8 +1,0 @@
-{"steps": 
-	[
-	{"step":"df -h","desc":"display disk space usage"},
-	{"step":"date","desc":"display the current dater"},
-	{"step":"time","desc":"display the current time"}
-	]
-}
-
