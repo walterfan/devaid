@@ -22,9 +22,9 @@
         </license>
     </licenses>
 
-    <scm>
+    <scm><!-- scm:git:git@github.com:{organization}/{project}.git -->
         <connection>scm:git:git://github.com/walterfan/devaid.git</connection>
-        <developerConnection>scm:git:ssh://github.com:walterfan/devaid.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:walterfan/devaid.git</developerConnection>
         <url>http://github.com/walterfan/devaid/tree/master</url>
     </scm>
 
