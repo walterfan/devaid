@@ -9,7 +9,7 @@ public class ConsoleUtils {
         private static InputStreamReader inputStream = new InputStreamReader(System.in);
         private static BufferedReader reader = new BufferedReader(inputStream);
 
-        public int getNumberFromConsole() {
+        public static int getNumberFromConsole() {
             int number = 0;
             try {
                 number = Integer.parseInt(reader.readLine());
@@ -19,7 +19,7 @@ public class ConsoleUtils {
             return number;
         }
 
-        public String getStringFromConsole() {
+        public static String getStringFromConsole() {
             String strInput="";
             try {
                 strInput = reader.readLine();
