@@ -1,19 +1,8 @@
 package com.github.walterfan.devaid;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.security.ProtectionDomain;
-import java.util.Collections;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-
-
-
+import com.github.walterfan.devaid.webmonitor.WebCmdHandler;
+import com.github.walterfan.devaid.webmonitor.WebHandler;
+import com.github.walterfan.util.ConfigLoader;
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
@@ -27,7 +16,6 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
@@ -35,9 +23,15 @@ import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
-import com.github.walterfan.devaid.webmonitor.WebCmdHandler;
-import com.github.walterfan.devaid.webmonitor.WebHandler;
-import com.github.walterfan.util.ConfigLoader;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.security.ProtectionDomain;
+import java.util.Collections;
 
 public class WebApp extends HttpServlet {
 	
@@ -48,12 +42,14 @@ public class WebApp extends HttpServlet {
 	private static final Logger logger = Log.getLogger(WebApp.class);
 	private static final String CONFIG_DIR = "./etc";
 	private static String CONFIG_FILE = "devaid.properties";
-	private static String JSP_WIKI_DIR = "/workspace/exam/JSPWiki";
 	private static String JSP_WIKI_PATH = "/wiki";
-	private static String JSP_WIKI_TMP = "/workspace/temp";
+	private static String JSP_BASE_DIR = "/workspace/walter/wfnote";
+	private static String JSP_WIKI_DIR = JSP_BASE_DIR + "/jspwiki";
+	private static String JSP_WIKI_TMP = JSP_BASE_DIR + "/temp";
+
 	private static int WEB_PORT = 1975;
 	private static String HOME_PAGE = "index.html";
-	private static String HOME_FOLDER = "/workspace/cpp/cwhat/site";
+	private static String HOME_FOLDER = JSP_BASE_DIR + "/site";
 	
 	private Server _server;
 	private WebHandler webHandler;
@@ -65,12 +61,13 @@ public class WebApp extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JSP_WIKI_DIR = cfgLoader.getProperty("JSP_WIKI_DIR","/workspace/exam/JSPWiki");
-		JSP_WIKI_PATH = cfgLoader.getProperty("JSP_WIKI_PATH","/wiki");
-		JSP_WIKI_TMP = cfgLoader.getProperty("JSP_WIKI_TMP","/workspace/temp");
+		JSP_WIKI_DIR = cfgLoader.getProperty("JSP_WIKI_DIR", JSP_WIKI_DIR);
+		JSP_WIKI_PATH = cfgLoader.getProperty("JSP_WIKI_PATH",JSP_WIKI_PATH);
+		JSP_WIKI_TMP = cfgLoader.getProperty("JSP_WIKI_TMP",JSP_WIKI_TMP);
+
+		HOME_FOLDER = cfgLoader.getProperty("HOME_FOLDER",HOME_FOLDER);
 		HOME_PAGE = cfgLoader.getProperty("HOME_PAGE","index.html");
-		HOME_FOLDER = cfgLoader.getProperty("HOME_FOLDER","./site");
-		WEB_PORT = NumberUtils.toInt(cfgLoader.getProperty("WEB_PORT","1975"));
+		WEB_PORT = NumberUtils.toInt(cfgLoader.getProperty("WEB_PORT","" + WEB_PORT));
 	}
 	
 	public WebHandler getWebHandler() {
