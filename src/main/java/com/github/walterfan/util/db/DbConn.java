@@ -63,7 +63,7 @@ public class DbConn implements ConnectionHolder {
     }
     /**
      * (non-Javadoc)
-     * @see cn.fanyamin.util.db.ConnectionHolder#createConnection()
+     * @see com.github.walterfan.util.db.ConnectionHolder#createConnection()
      * @return DB connection
      */
     public Connection createConnection() throws SQLException {
@@ -84,7 +84,7 @@ public class DbConn implements ConnectionHolder {
 
     /**
      * (non-Javadoc)
-     * @see cn.fanyamin.util.db.ConnectionHolder#closeConnection()
+     * @see com.github.walterfan.util.db.ConnectionHolder#closeConnection()
      */
     public void closeConnection() {
         DbUtils.closeQuietly(this.conn);
@@ -105,7 +105,7 @@ public class DbConn implements ConnectionHolder {
     }
     /**
      * (non-Javadoc)
-     * @see cn.fanyamin.util.db.ConnectionHolder#getConnection()
+     * @see com.github.walterfan.util.db.ConnectionHolder#getConnection()
      * @return db connection
      */
     public Connection getConnection() {
@@ -114,7 +114,7 @@ public class DbConn implements ConnectionHolder {
 
     /**
      * @see
-     * cn.fanyamin.util.db.ConnectionHolder#setCurStatement(java.sql.
+     * com.github.walterfan.util.db.ConnectionHolder#setCurStatement(java.sql.
      * Statement)
      * @param stmt statement
      */
@@ -124,7 +124,7 @@ public class DbConn implements ConnectionHolder {
     }
     
     /* (non-Javadoc)
-     * @see cn.fanyamin.jdbc.ConnectionHolder#getCurSql()
+     * @see com.github.walterfan.jdbc.ConnectionHolder#getCurSql()
      */
     public String getCurSql() {
         return this.curSql;
@@ -149,7 +149,7 @@ public class DbConn implements ConnectionHolder {
     }
 
     /**
-     * @see cn.fanyamin.util.db.ConnectionHolder#cancel()
+     * @see com.github.walterfan.util.db.ConnectionHolder#cancel()
      */
     public void cancel() {
         if (curStmt != null) {

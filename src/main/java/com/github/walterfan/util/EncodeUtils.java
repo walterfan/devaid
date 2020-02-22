@@ -1,5 +1,6 @@
 package com.github.walterfan.util;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -122,8 +123,6 @@ public class EncodeUtils {
                 md = MessageDigest.getInstance(alga);
                 return md.digest(str.getBytes()); 
             } catch (NoSuchAlgorithmException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
                 throw e;
             }
 
@@ -302,20 +301,29 @@ public class EncodeUtils {
 	}
 
 
+
     /**
      * simple test codes
      * 
      * @param args
      *            no
      */
-    public static void main(String[] args) {
-    	String seq = "123456789123";
-    	long num = Long.parseLong(seq);
-    	System.out.println(num + "," + Long.toBinaryString(num));
-    	num = num>>>16;
-    	System.out.println(num + "," + Long.toBinaryString(num));
-    	
-    	
+    public static void main(String[] args) throws UnsupportedEncodingException {
+    	//String sql = "admin???";
+
+    	//System.out.println(byte2Hex(sql.getBytes()));
+
+
+        String sql2 = "admin管理员";
+        byte[] bytes2 =sql2.getBytes(Charset.forName("ISO-8859-1"));
+
+        System.out.println(byte2Hex(bytes2));
+
+        String str1 = new String(bytes2, "ISO-8859-1");
+        System.out.println(str1);
+
+    	String str2 = new String(bytes2, "UTF-8");
+        System.out.println(str2);
     }
 
 }

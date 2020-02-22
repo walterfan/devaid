@@ -2,14 +2,12 @@ package com.github.walterfan.devaid.annotation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 
 import com.github.walterfan.util.annotation.Issue;
+import org.apache.commons.lang.StringUtils;
 
 public class SourceReader {
 	private List<Map<String, String>> annotationList = new LinkedList<Map<String, String>>();
@@ -25,6 +23,27 @@ public class SourceReader {
 		do {
 			pos = readAnnotation(tag, fileContent, pos);
 		} while(pos >=0);
+
+
+		printMarkdownTable(this.annotationList);
+
+	}
+
+
+	@Issue(problem="how to print markdown table",
+			rootCause="the format is not good",
+			solution="parse collection")
+	public void printMarkdownTable(Collection<Map<String, String>> collection)  {
+
+		System.out.println("| problem | root cause | solution | ");
+		System.out.println("|---|---|---| ");
+
+		collection.stream().forEach(x -> {
+			System.out.println(String.format("| %s | %s | %s |",
+					StringUtils.strip(x.get("problem"),  "\""),
+					StringUtils.strip(x.get("rootCause"),  "\""),
+					StringUtils.strip(x.get("solution"),  "\"")));
+		});
 	}
 
 	private int readAnnotation(String tag, String fileContent, int pos) {
@@ -47,15 +66,14 @@ public class SourceReader {
 			}
 		}
 		annotationList.add(attMap);
-		System.out.println(attMap.keySet());
-		System.out.println(attMap.values());
+
 		return pos3;
 	}
 	
 	public static void main(String[] args) throws IOException {
 		String workingDir = System.getProperty("user.dir");
 		System.out.println(workingDir);
-		String filePath = "./src/test/java/com/github/walterfan/devaid/util/annotation/SourceReader.java";
+		String filePath = "./src/test/java/com/github/walterfan/devaid/annotation/SourceReader.java";
 		new SourceReader().readSource(filePath ,"@Issue");
 	}
 }

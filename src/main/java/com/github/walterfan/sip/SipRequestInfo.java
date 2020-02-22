@@ -20,6 +20,7 @@ import javax.sip.header.FromHeader;
 import javax.sip.header.HeaderFactory;
 import javax.sip.header.ToHeader;
 import javax.sip.header.UserAgentHeader;
+import javax.sip.message.MessageFactory;
 import javax.sip.message.Request;
 
 import com.github.walterfan.util.RandomUtils;
@@ -28,6 +29,7 @@ public class SipRequestInfo {
 	private SipFactory sipFactory = SipFactory.getInstance();
 	private HeaderFactory headerFactory;
 	private AddressFactory addressFactory;
+	private MessageFactory messageFactory;
 
 	private String requestUri;
 	
@@ -52,14 +54,13 @@ public class SipRequestInfo {
 	private int cseqNum = 0;
 	
 	public SipRequestInfo() throws PeerUnavailableException {
-		headerFactory = sipFactory.createHeaderFactory();
-		addressFactory = sipFactory.createAddressFactory();
-		this.sipMethod = Request.REGISTER;
+		this(Request.REGISTER);
 	}
 	
 	public SipRequestInfo(String sipMethod) throws PeerUnavailableException {
 		headerFactory = sipFactory.createHeaderFactory();
 		addressFactory = sipFactory.createAddressFactory();
+		messageFactory = sipFactory.createMessageFactory();
 		this.sipMethod = sipMethod;
 	}
 	
@@ -206,4 +207,7 @@ public class SipRequestInfo {
 	public CSeqHeader getCSeqHeader() throws ParseException, InvalidArgumentException {
 		return headerFactory.createCSeqHeader(this.cseqNum, this.sipMethod);
 	}
+
+
+
 }

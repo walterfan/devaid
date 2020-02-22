@@ -1,5 +1,6 @@
 package com.github.walterfan.devaid.annotation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -30,4 +31,8 @@ public class IssueAnnotationProcessor extends AbstractProcessor {
 	  public SourceVersion getSupportedSourceVersion() {
 	    return SourceVersion.latestSupported();
 	  }
+
+	public static void main(String[] args) throws IOException {
+
+	}
 }

@@ -2,6 +2,7 @@ package com.github.walterfan.sip;
 
 //refer to http://www.oracle.com/technetwork/java/introduction-jain-sip-090386.html
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -29,6 +30,7 @@ import javax.sip.TimeoutEvent;
 import javax.sip.TransactionTerminatedEvent;
 import javax.sip.TransportNotSupportedException;
 import javax.sip.address.SipURI;
+import javax.sip.address.URI;
 import javax.sip.header.AuthorizationHeader;
 import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
@@ -320,26 +322,21 @@ public class SipUserAgent implements SipListener {
 		sipReq.setFromUri("sip:" + accesscode + "@" + domain);
 		sipReq.setContactUri("sip:" + srcAddr, "1", 1800);
 		sipReq.setUserAgent("TAS");
+
+
+		sipReq.setAuthorization("");
 		return sendRequest(sipReq);
 	}
 
 
 	public static void main(String args[]) {
 
-		int nPort = args.length == 0 ? 5062 : Integer.parseInt(args[0]);
+		int nPort = args.length == 0 ? 5068 : Integer.parseInt(args[0]);
 		try
         {
-
-		    String ip = InetAddress.getLocalHost().getHostAddress();
-
+			String ip = InetAddress.getLocalHost().getHostAddress();
 			SipUserAgent ua = new SipUserAgent(ip, nPort);
-			ua.setMessageProcessor(new SipMessageHandler());
-			//user name, src addr, dest addr, domain
-			String seq = ua.sendRegisterRequest("140723211", "10.224.57.140:5060", "10.224.57.195:5060", "walterfan.github.com");
-			ua.addExpection(seq, 200);
-			ua.waitResult(WAIT_SECONDS);
-			int errCnt = ua.checkResult();
-			System.out.println("failed case: " + errCnt);
+			//sendTestRegister(ua);
         } 
 		catch (Throwable e)
         {
@@ -349,4 +346,17 @@ public class SipUserAgent implements SipListener {
         }
 
     }
+
+	private static void sendTestRegister(SipUserAgent ua) throws Exception {
+
+		ua.setMessageProcessor(new SipMessageHandler());
+		//user name, src addr, dest addr, domain
+		String seq = ua.sendRegisterRequest("140723211", "10.140.202.83:5068", "10.224.77.47:5060", "walterfan.github.com");
+		ua.addExpection(seq, 200);
+		ua.waitResult(WAIT_SECONDS);
+		int errCnt = ua.checkResult();
+		System.out.println("failed case: " + errCnt);
+	}
+
+	//todo: build sip request
 }

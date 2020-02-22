@@ -220,4 +220,25 @@ public class HttpUtil {
             return "";
         }
 	}
+
+
+	public static boolean hasFieldValue(String httpHeader, String fieldKey, String fieldVal) {
+		if(null == httpHeader || null == fieldKey || null == fieldVal) {
+			return false;
+		}
+
+		String[] toggles = httpHeader.split(";");
+		for(String toggle: toggles) {
+			String[] toggleKeyVal = toggle.split("=");
+			if(toggleKeyVal.length > 1) {
+				String key = StringUtils.trim(toggleKeyVal[0]);
+				String val = StringUtils.trim(toggleKeyVal[1]);
+
+				if(fieldKey.equals(key) && fieldVal.equalsIgnoreCase(val))  {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

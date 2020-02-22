@@ -61,7 +61,7 @@ public class Shell{
         //   * UIKeyboardInteractive#promptKeyboardInteractive()
 
       };
-
+      session.setConfig("StrictHostKeyChecking", "no");
       session.setUserInfo(ui);
 
       // It must not be recommended, but if you want to skip host-key check,

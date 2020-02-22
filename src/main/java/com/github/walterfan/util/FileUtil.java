@@ -98,9 +98,10 @@ public class FileUtil {
     }
     public static void createFile(String filename, String content) throws IOException {
         File file = new File(filename);
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        bw.write(content);
-        bw.close();
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(content);
+            bw.close();
+        }
     }
 
     public static void createFile(String filename, String content, boolean ignoreIfExitst) throws IOException {
@@ -108,9 +109,10 @@ public class FileUtil {
         if (ignoreIfExitst && file.exists()) {
             return;
         }
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        bw.write(content);
-        bw.close();
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(content);
+            bw.close();
+        }
     }
 
     public static boolean isFileExist(String filename) {

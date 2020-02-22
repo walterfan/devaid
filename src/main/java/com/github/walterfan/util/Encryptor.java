@@ -12,7 +12,11 @@ import java.security.spec.AlgorithmParameterSpec;
 public class Encryptor {
      
     private static byte[] IV_BYTES = "1234567890123456".getBytes();
-    
+
+    private static String AES_CBC_NOPADDING = "AES/CBC/NoPadding";
+
+    private static String AES_ALGORITHM = "AES";
+
     public static final String ENC_CBC_NOPADDING = "AES/CBC/NoPadding";
     
     private static final String ENC_ALGORITHM = "AES";
@@ -190,5 +194,51 @@ public class Encryptor {
     }
 
 
- 
+    //Key length is 16(128 bits) or 32(256 bits), if it's 32 bytes(256 bits),
+//need to download the unlimited strength JCE policy files
+//default ECB mode
+    public static byte[] encodeAES(byte[] bytes, byte[] keyBytes) throws SecurityException {
+        try {
+            Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyBytes, AES_ALGORITHM));
+            return cipher.doFinal(bytes);
+        } catch (Exception e) {
+            throw new SecurityException(e);
+        }
+    }
+
+    public static byte[] decodeAES(byte[] encryptedBytes, byte[] keyBytes) throws SecurityException {
+        try {
+            Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, AES_ALGORITHM));
+            return cipher.doFinal(encryptedBytes);
+        } catch (Exception e) {
+            throw new SecurityException(e);
+        }
+    }
+
+    public static String encryptPwd(String pwd, String key64, String key2) throws Exception {
+        byte[] keyBytes = makeKeyBySHA2(key64 + key2, 16);
+        return new String(EncodeUtils.encodeBase64(encodeAES(pwd.getBytes(), keyBytes)));
+    }
+
+    public static String decryptPwd(String pwd, String key64, String key2) throws Exception {
+        byte[] encryptResult = EncodeUtils.decodeBase64(pwd.getBytes());
+        byte[] keyBytes = makeKeyBySHA2(key64 + key2, 16);
+        return new String(decodeAES(encryptResult, keyBytes));
+    }
+
+
+    public static void main(String[] args) throws Exception {
+
+        if(args.length > 2) {
+            String encryptedPwd = args[0];
+            String key1 = args[1];
+            String key2 = args[2];
+            String originPwd = decryptPwd(encryptedPwd, key1, key2);
+            System.out.println(originPwd);
+        }
+
+    }
+
 }

@@ -1,16 +1,14 @@
 package com.github.walterfan.devaid;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import com.github.walterfan.devaid.http.HttpTool;
 import com.github.walterfan.devaid.sql.SQLTool;
 import com.github.walterfan.util.swing.SwingUtils;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -80,10 +78,6 @@ public class ToolKit extends JFrame implements ChangeListener {
         CassandraTool kvTool = new CassandraTool("Cassandra Tool v1.0");
         kvTool.init();
         frameContainer.addFrame(kvTool);
-        
-        JmsTool jmsTool = new JmsTool("JMS Tool v1.0");
-        jmsTool.init();
-        frameContainer.addFrame(jmsTool);
 
         
         JFrame tzTool = new TimeZoneConverter();

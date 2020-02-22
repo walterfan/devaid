@@ -16,10 +16,15 @@ package com.github.walterfan.util;
  * limitations under the License.
  */
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1116,4 +1121,15 @@ public abstract class StringUtil {
                 return arrayToDelimitedString(arr, ",");
         }
 
+
+        public static void main(String[] args) throws ParseException {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+                String dateString = format.format( new Date()   );
+                Date   date       = format.parse ( "2019-08-13T21:57:48+08:00" );
+                //String pattern = "yyyy-MM-dd'T'HH:mm:ssXXX";
+                //ZonedDateTime ret = ZonedDateTime.parse("2019-08-13T21:57:48+08:00");
+                System.out.println(dateString + "/" + date.toString());
+
+        }
 }

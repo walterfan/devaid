@@ -1,18 +1,15 @@
 package com.github.walterfan.devaid;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.net.URI;
+
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
+public class AppTest extends TestCase
 {
     /**
      * Create the test case
