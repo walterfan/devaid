@@ -40,7 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <metrics.version>3.1.0</metrics.version>
         <resteasy.version>3.0.9.Final</resteasy.version>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
         <mybatis.version>3.2.8</mybatis.version>
         <java.version>1.8</java.version>
     </properties>
