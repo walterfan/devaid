@@ -3,6 +3,7 @@ package com.github.walterfan.util.algorithm;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -33,12 +34,22 @@ public class SortDemo {
 
 
     public static void main(String[] args) {
-        log.info("--- bubble sort  ---");
         List<Poker.Card> cards1 = Poker.createCardList(2);
+        List<Poker.Card> cards2 = new ArrayList<>(cards1);
+        List<Poker.Card> cards3 = new ArrayList<>(cards1);
+        List<Poker.Card> cards4 = new ArrayList<>(cards1);
+
+        log.info("--- 1) bubble sort  ---");
         sortAndWatch(cards1, (t,u) -> SortUtils.bubbleSort(t, u));
-        log.info("--- insert sort ---");
-        List<Poker.Card> cards2 = Poker.createCardList(2);
+
+        log.info("--- 2) insert sort ---");
         sortAndWatch(cards2, (t,u) -> SortUtils.insertSort(t, u));
+
+        log.info("--- 3) merge sort ---");
+        sortAndWatch(cards3, (t,u) -> SortUtils.mergeSort(t, u));
+
+        log.info("--- 4) quick sort ---");
+        sortAndWatch(cards4, (t,u) -> SortUtils.quickSort(t, u));
 
         log.info("--- insert sort ---");
         Comparator<Integer> integerComparator = new Comparator<Integer>() {

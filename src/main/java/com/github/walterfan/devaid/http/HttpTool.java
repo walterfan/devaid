@@ -6,49 +6,29 @@
 
 package com.github.walterfan.devaid.http;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import com.github.walterfan.util.EncodeUtils;
+import com.github.walterfan.util.FileUtil;
+import com.github.walterfan.util.RegexUtils;
+import com.github.walterfan.util.http.HttpClientWrapper;
+import com.github.walterfan.util.http.HttpCommand;
+import com.github.walterfan.util.http.HttpCommandConfig;
+import com.github.walterfan.util.http.HttpCommandGroup;
+import com.github.walterfan.util.http.HttpResponse;
+import com.github.walterfan.util.http.HttpResult;
+import com.github.walterfan.util.http.HttpUtil;
+import com.github.walterfan.util.swing.ActionHandlerFactory;
+import com.github.walterfan.util.swing.SwingUtils;
+import com.github.walterfan.util.swing.UnderlineHighlighter.UnderlineHighlightPainter;
+import com.github.walterfan.util.swing.XMLFormatter;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.TreeSelectionEvent;
@@ -58,30 +38,22 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.github.walterfan.util.EncodeUtils;
-import com.github.walterfan.util.FileUtil;
-import com.github.walterfan.util.http.HttpClientWrapper;
-import com.github.walterfan.util.http.HttpCommand;
-import com.github.walterfan.util.http.HttpCommandConfig;
-import com.github.walterfan.util.http.HttpCommandGroup;
-import com.github.walterfan.util.http.HttpResponse;
-import com.github.walterfan.util.http.HttpResult;
-import com.github.walterfan.util.http.HttpUtil;
-import com.github.walterfan.util.RegexUtils;
-import com.github.walterfan.util.swing.ActionHandlerFactory;
-import com.github.walterfan.util.swing.SwingUtils;
-import com.github.walterfan.util.swing.XMLFormatter;
-import com.github.walterfan.util.swing.UnderlineHighlighter.UnderlineHighlightPainter;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Reserve all rights
@@ -1154,10 +1126,11 @@ public class HttpTool extends JFrame {
 
                 if (this.chkRespHeader.isSelected()) {
                     Header[] headers = response.getHeaders();
-
-                    for (Header aHead : headers) {
-                        sb.append(aHead.getName() + " = " + aHead.getValue()
-                                + "\n");
+                    if(headers != null) {
+                        for (Header aHead : headers) {
+                            sb.append(aHead.getName() + " = " + aHead.getValue()
+                                    + "\n");
+                        }
                     }
                     sb.append("\n\n");
                     

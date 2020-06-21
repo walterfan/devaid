@@ -51,7 +51,7 @@ public abstract class AbstractServer implements IServer {
 
      /**
      * @return started or not
-     * @see cn.fanyamin.server.cn.fanyamin.server.IServer#isStarted()
+     *
      */
     public boolean isStarted() {
         return this.isStarted;
